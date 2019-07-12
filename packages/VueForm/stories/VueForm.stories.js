@@ -1,15 +1,5 @@
 import { storiesOf } from '@storybook/vue';
-import VueForm from '../src/components/VueForm.vue';
+import Simple from './Simple.vue';
 
-storiesOf('VueForm', module).add('Normal usage', () => ({
-  components: { VueForm },
-  template:
-    `
-      <vue-form
-        :message="message"
-      />
-    `,
-  data: () => ({
-    message: 'Hello world!',
-  }),
-}));
+storiesOf('VueForm', module)
+  .add('Simple', () => Simple);

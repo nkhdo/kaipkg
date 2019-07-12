@@ -1,5 +1,7 @@
 {
   "name": "@kaipkg/vue-form",
+  "description": "a simple, schema-based form builder",
+  "author": "Hoang Do <me@kaid.sh>",
   "version": "0.0.1",
   "publishConfig": {
     "access": "public"
@@ -11,5 +13,6 @@
   "files": [
     "dist",
     "README.md"
-  ]
+  ],
+  "license": "MIT"
 }
