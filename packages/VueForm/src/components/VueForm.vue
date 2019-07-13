@@ -11,7 +11,10 @@
       :value="value[field.name]"
       @input="value => emitChange(field.name, value)"
     />
-    <div class="kaipkg-input">
+    <div
+      v-if="!noSubmitButton"
+      class="kaipkg-input"
+    >
       <slot name="submit-button">
         <input
           class="kaipkg-input-el"
@@ -39,6 +42,10 @@ export default {
     schema: {
       type: Array,
       required: true,
+    },
+    noSubmitButton: {
+      type: Boolean,
+      default: false,
     },
   },
   provide() {

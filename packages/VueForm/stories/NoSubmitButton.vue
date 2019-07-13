@@ -3,7 +3,7 @@
     <vue-form
       v-model="formData"
       :schema="formSchema"
-      @submit.prevent="handleSubmit"
+      no-submit-button
     />
     <hr>
     <div class="preview">
@@ -16,15 +16,12 @@
 import VueForm from '../src/components/VueForm.vue';
 
 export default {
-  name: 'BasicStory',
+  name: 'NoSubmitButtonStory',
   components: {
     VueForm,
   },
   data: () => ({
     formData: {
-      firstName: 'Hoang',
-      lastName: 'Do',
-      birthYear: 1994,
     },
     formSchema: [
       {
