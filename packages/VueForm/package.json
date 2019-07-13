@@ -17,6 +17,7 @@
   },
   "main": "dist/VueForm.common.js",
   "files": [
+    "src",
     "dist",
     "README.md"
   ],

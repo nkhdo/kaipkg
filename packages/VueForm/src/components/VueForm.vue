@@ -1,31 +1,36 @@
 <template>
   <form
+    :id="formId"
     class="kaipkg-form"
     @submit="submit"
   >
-    <div
+    <vue-form-input
       v-for="field in schema"
       :key="field.name"
-      class="kaipkg-field"
-    >
-      <input
-        :value="value[field.name]"
-        :required="!!field.required"
-        @input="e => emitChange(field.name, e)"
-      >
-    </div>
-    <div class="kaipkg-field">
-      <input
-        type="submit"
-        value="Submit"
-      >
+      :schema="field"
+      :value="value[field.name]"
+      @input="value => emitChange(field.name, value)"
+    />
+    <div class="kaipkg-input">
+      <slot name="submit-button">
+        <input
+          class="kaipkg-input-el"
+          type="submit"
+          value="Submit"
+        >
+      </slot>
     </div>
   </form>
 </template>
 
 <script>
+import VueFormInput from './VueFormInput.vue';
+
 export default {
   name: 'VueForm',
+  components: {
+    VueFormInput,
+  },
   props: {
     value: {
       type: Object,
@@ -36,11 +41,21 @@ export default {
       required: true,
     },
   },
+  provide() {
+    return {
+      formId: this.formId,
+    };
+  },
+  data() {
+    return {
+      formId: Math.random().toString(36).substring(7),
+    };
+  },
   methods: {
-    emitChange(field, e) {
+    emitChange(field, value) {
       this.$emit('input', {
         ...this.value,
-        [field]: e.target.value,
+        [field]: value,
       });
     },
     submit(e) {
@@ -51,8 +66,5 @@ export default {
 </script>
 
 <style lang="scss">
-.kaipkg-form {
-  border: 1px solid #ccc;
-  padding: 5px;
-}
+@import '../scss/main.scss';
 </style>

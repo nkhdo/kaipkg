@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/vue';
-import Simple from './Simple.vue';
+import Basic from './Basic.vue';
 
 storiesOf('VueForm', module)
-  .add('Simple', () => Simple);
+  .add('Basic', () => Basic);

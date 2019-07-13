@@ -12,7 +12,7 @@
 import VueForm from '../src/components/VueForm.vue';
 
 export default {
-  name: 'SimpleStory',
+  name: 'BasicStory',
   components: {
     VueForm,
   },
@@ -20,18 +20,28 @@ export default {
     formData: {
       firstName: 'Hoang',
       lastName: 'Do',
+      birthYear: 1994,
     },
     formSchema: [
       {
         name: 'firstName',
         label: 'First name',
+        placeholder: 'John',
         type: String,
         required: true,
       },
       {
         name: 'lastName',
         label: 'Last name',
+        placeholder: 'Doe',
         type: String,
+        required: true,
+      },
+      {
+        name: 'birthYear',
+        label: 'Birth year',
+        placeholder: 'Some year in the past',
+        type: Number,
         required: true,
       },
     ],
