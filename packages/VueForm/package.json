@@ -2,10 +2,10 @@
   "name": "@kaipkg/vue-form",
   "description": "a simple, schema-based form builder",
   "author": "Hoang Do <me@kaid.sh>",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/nkhdo/kaipkg",
+    "type": "git",
+    "url": "https://github.com/nkhdo/kaipkg",
     "directory": "packages/VueForm"
   },
   "publishConfig": {
