@@ -1,0 +1,25 @@
+{
+  "name": "@kaipkg/vue-select",
+  "description": "a simple, lightweight select component",
+  "author": "Hoang Do <me@kaid.sh>",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nkhdo/kaipkg",
+    "directory": "packages/VueSelect"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vue-cli-service build --target lib --name VueSelect src/components/VueSelect.vue",
+    "preversion": "yarn build"
+  },
+  "main": "dist/VueSelect.common.js",
+  "files": [
+    "src",
+    "dist",
+    "README.md"
+  ],
+  "license": "MIT"
+}
