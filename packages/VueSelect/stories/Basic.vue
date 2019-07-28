@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import VueSelect from '../src/VueSelect.vue';
+import VueSelect from '../src/components/VueSelect.vue';
 
 export default {
   name: 'BasicStory',
