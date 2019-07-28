@@ -5,41 +5,54 @@
   >
     <div
       class="kaipkg-select__container"
-      @click.prevent.stop="handleClick"
+      @click.prevent.stop="handleContainerClick"
     >
-      <div
-        v-for="val in values"
-        v-show="showValues"
-        :key="val"
-        class="kaipkg-select__container-value"
-      >
-        <slot
-          name="selected-option"
-          :selected-option="findOptionWithValue(val)"
+      <div class="kaipkg-select__container-values">
+        <div
+          v-for="val in values"
+          v-show="showValues"
+          :key="val"
+          class="kaipkg-select__container-values-value"
         >
-          {{ labelFor(findOptionWithValue(val)) }}
-        </slot>
+          <slot
+            name="selected-option"
+            :selected-option="findOptionWithValue(val)"
+          >
+            {{ labelFor(findOptionWithValue(val)) }}
+          </slot>
+          <a
+            v-if="clearable || multiple"
+            class="kaipkg-select__deselect"
+            title="Deselect"
+            @click.prevent.stop="deselectOption(val)"
+          />
+        </div>
+        <input
+          ref="inputElement"
+          v-model="search"
+          :class="inputClasses"
+          :placeholder="inputPlaceholder"
+          @focus="showOptionsSelect"
+          @blur="hideOptionsSelect"
+        >
+        <a
+          v-if="clearable && multiple && !empty"
+          class="kaipkg-select__deselect kaipkg-select__deselect-all"
+          title="Deselect all"
+          @click.prevent.stop="deselectAll()"
+        />
       </div>
-      <input
-        ref="inputElement"
-        v-model="search"
-        :class="inputClasses"
-        :placeholder="inputPlaceholder"
-        @focus="handleInputFocus"
-        @blur="handleInputBlur"
-      >
       <div class="kaipkg-select__container-arrow">
-        <slot name="arrow">
-          <div class="kaipkg-select__arrow" />
-        </slot>
+        <div class="kaipkg-select__arrow" />
       </div>
     </div>
     <div class="kaipkg-select__options">
       <div
-        v-for="option in options"
+        v-for="option in shownOptions"
         :key="valueFor(option)"
         class="kaipkg-select__options-item"
-        @mousedown="selectOption(option)"
+        :class="{ 'kaipkg-select__options-item__active': isSelected(option) }"
+        @mousedown="handleOptionClick(option)"
       >
         <slot
           name="option"
@@ -47,6 +60,17 @@
         >
           {{ labelFor(option) }}
         </slot>
+      </div>
+      <div
+        v-if="shownOptions.length === 0"
+        class="kaipkg-select-text__muted"
+      >
+        <span v-if="options.length === 0">
+          No option...
+        </span>
+        <span>
+          No more option...
+        </span>
       </div>
     </div>
   </div>
@@ -128,6 +152,9 @@ export default {
       return this.labelFor(this.findOptionWithValue(this.value)) || this.placeholder;
     },
     values() {
+      if (this.empty) {
+        return [];
+      }
       if (this.multiple) {
         return this.value;
       }
@@ -145,17 +172,38 @@ export default {
       }
       return this.open || this.empty;
     },
+    shownOptions() {
+      if (this.multiple) {
+        return this.options.filter(option => !this.isSelected(option));
+      }
+      return this.options;
+    },
   },
   methods: {
-    handleClick() {
+    handleContainerClick() {
       this.$refs.inputElement.focus();
     },
-    handleInputFocus() {
+    handleOptionClick(option) {
+      if (this.multiple) {
+        this.toggleOption(option);
+      } else {
+        this.selectOption(option);
+      }
+    },
+    showOptionsSelect() {
       this.open = true;
     },
-    handleInputBlur() {
+    hideOptionsSelect() {
       this.open = false;
       this.search = '';
+    },
+    toggleOption(option) {
+      const value = this.valueFor(option);
+      if (this.values.includes(value)) {
+        this.deselectOption(value);
+      } else {
+        this.selectOption(option);
+      }
     },
     selectOption(option) {
       const value = this.valueFor(option);
@@ -164,7 +212,20 @@ export default {
       } else {
         this.$emit('input', value);
       }
-      this.open = false;
+      this.hideOptionsSelect();
+    },
+    deselectOption(value) {
+      if (this.multiple) {
+        this.$emit('input', this.value.filter(v => v !== value));
+      } else {
+        this.$emit('input', null);
+      }
+      this.hideOptionsSelect();
+    },
+    deselectAll() {
+      if (this.multiple) {
+        this.$emit('input', []);
+      }
     },
     labelFor(option) {
       if (typeof option === 'object') {
@@ -181,6 +242,9 @@ export default {
     findOptionWithValue(value) {
       return this.options.find(option => this.valueFor(option) === value);
     },
+    isSelected(option) {
+      return this.values.includes(this.valueFor(option));
+    },
   },
 };
 </script>
@@ -193,8 +257,8 @@ $border-color-open: #80bdff;
 $border-radius: 4px;
 
 $background-color: #ffffff;
-$background-color-hover: #fcfcfc;
-$background-color-active: #80bdff;
+$background-color-hover: #f5f6f7;
+$background-color-active: rgba(199, 224, 244, 0.35);
 $background-color-disabled: #fbfbfb;
 
 .kaipkg-select {
@@ -204,22 +268,33 @@ $background-color-disabled: #fbfbfb;
     border: 1px solid $border-color;
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
     padding: $spacer;
     border-radius: $border-radius;
     background-color: $background-color;
-    cursor: pointer;
     z-index: 1;
 
-    &-value {
+    &-values {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      flex: 1;
       margin-right: $spacer / 2;
+      &-value {
+        display: inline-flex;
+        align-items: center;
+        margin-right: $spacer / 2;
+        flex: 1;
+        .kaipkg-select__deselect {
+          margin-left: auto;
+        }
+      }
     }
 
     &-input {
       border: none;
       outline: none;
-      width: 100%;
       background: transparent;
+      flex: 1;
     }
 
     &-arrow {
@@ -231,6 +306,7 @@ $background-color-disabled: #fbfbfb;
         width: 5px;
         height: 5px;
         transform: rotate(45deg);
+        margin: 0 2px 2px 0;
       }
     }
   }
@@ -239,6 +315,8 @@ $background-color-disabled: #fbfbfb;
     border: 1px solid $border-color;
     border-radius: $border-radius;
     width: 100%;
+    max-height: 200px;
+    overflow: auto;
     position: absolute;
     top: 100%;
     left: 0;
@@ -255,6 +333,9 @@ $background-color-disabled: #fbfbfb;
         background-color: $background-color-hover;
       }
     }
+    &-item__active {
+      background-color: $background-color-active;
+    }
   }
 
   &.kaipkg-select--open {
@@ -265,6 +346,22 @@ $background-color-disabled: #fbfbfb;
       display: block;
       opacity: 1;
       z-index: 2;
+    }
+  }
+
+  &.kaipkg-select--multiple {
+    .kaipkg-select__container {
+      &-values {
+        &-value {
+          border-radius: $border-radius;
+          background-color: $background-color-active;
+          padding: 0 $spacer / 2;
+          flex: unset;
+          .kaipkg-select__deselect {
+            margin-left: $spacer/2;
+          }
+        }
+      }
     }
   }
 
@@ -282,5 +379,45 @@ $background-color-disabled: #fbfbfb;
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+.kaipkg-select__deselect {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  &:before {
+    content: "";
+    width: 10px;
+    height: 2px;
+    background-color: darken($border-color, 10%);
+    position: absolute;
+    top: 4px;
+  }
+  &:after {
+    content: "";
+    width: 2px;
+    height: 10px;
+    background-color: darken($border-color, 10%);
+    position: absolute;
+    left: 4px;
+  }
+  &:hover, &:focus {
+    &:before, &::after {
+      background-color: darken($border-color, 20%);
+    }
+  }
+}
+
+.kaipkg-select__deselect-all {
+  margin-left: auto;
+  margin-right: $spacer / 2;
+}
+
+.kaipkg-select-text__muted {
+  padding: $spacer;
+  color: #666;
 }
 </style>

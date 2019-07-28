@@ -8,6 +8,7 @@
       <vue-select
         v-model="singleValue"
         :options="options"
+        :clearable="clearable"
         :searchable="searchable"
         :disabled="disabled"
       />
@@ -21,6 +22,7 @@
       <vue-select
         v-model="multipleValues"
         :options="options"
+        :clearable="clearable"
         :searchable="searchable"
         :disabled="disabled"
         multiple
@@ -35,6 +37,14 @@
           type="checkbox"
         >
         <label for="searchable-checkbox">searchable</label>
+      </div>
+      <div>
+        <input
+          id="clearable-checkbox"
+          v-model="clearable"
+          type="checkbox"
+        >
+        <label for="clearable-checkbox">clearable</label>
       </div>
       <div>
         <input
@@ -60,26 +70,26 @@ export default {
     return {
       options: [
         {
-          label: 'Apple',
+          label: 'Apple make the label longer longer',
           value: 'apple',
         },
         {
-          label: 'Orange',
+          label: 'Orange make the label longer longer',
           value: 'orange',
         },
         {
-          label: 'Pen',
+          label: 'Pen long long long long long label',
           value: 'pen',
         },
         {
-          label: 'Bucket',
+          label: 'Bucket long again long long long long',
           value: 'bucket',
         },
       ],
       singleValue: null,
       multipleValues: [],
       searchable: true,
-      multiple: false,
+      clearable: true,
       disabled: false,
     };
   },
