@@ -30,8 +30,8 @@
         <input
           ref="inputElement"
           v-model="search"
-          :class="inputClasses"
           :placeholder="inputPlaceholder"
+          :class="inputClasses"
           @focus="showOptionsSelect"
           @blur="hideOptionsSelect"
         >
@@ -149,8 +149,11 @@ export default {
       return this.value === null || this.value === undefined;
     },
     inputPlaceholder() {
-      if (!this.open || this.multiple) {
+      if (!this.open) {
         return this.placeholder;
+      }
+      if (this.multiple) {
+        return 'Search for...';
       }
       return this.labelFor(this.findOptionWithValue(this.value)) || this.placeholder;
     },
@@ -171,7 +174,7 @@ export default {
     },
     showInput() {
       if (!this.searchable) {
-        return false;
+        return this.empty;
       }
       return this.open || this.empty;
     },
@@ -180,7 +183,7 @@ export default {
       const options = this.multiple
         ? this.options.filter(option => !this.isSelected(option))
         : this.options;
-      if (!this.search) {
+      if (!this.searchable || !this.search) {
         return options;
       }
       // linear search
@@ -296,7 +299,6 @@ $background-color-disabled: #fbfbfb;
         display: inline-flex;
         align-items: center;
         margin-right: $spacer / 2;
-        flex: 1;
         .kaipkg-select__deselect {
           margin-left: auto;
         }
@@ -306,8 +308,11 @@ $background-color-disabled: #fbfbfb;
     &-input {
       border: none;
       outline: none;
+      margin: 0;
+      padding: 0;
       background: transparent;
       flex: 1;
+      line-height: 1.4;
     }
 
     &-actions {
@@ -315,13 +320,13 @@ $background-color-disabled: #fbfbfb;
       display: flex;
       align-items: center;
       .kaipkg-select__arrow {
-        border-color: darken($border-color, 10%);
+        border-color: darken($border-color, 20%);
         border-style: solid;
         border-width: 0 2px 2px 0;
         width: 5px;
         height: 5px;
         transform: rotate(45deg);
-        margin: 0 2px 2px 0;
+        margin: 0 0 3px 0;
       }
     }
   }
@@ -330,16 +335,18 @@ $background-color-disabled: #fbfbfb;
     border: 1px solid $border-color;
     border-radius: $border-radius;
     width: 100%;
-    max-height: 200px;
+    max-height: 250px;
     overflow: auto;
     position: absolute;
     top: 100%;
     left: 0;
     background-color: $background-color;
 
-    display: none;
+    visibility: hidden;
     opacity: 0;
     z-index: -1;
+
+    transition: all .1s ease-in-out;
 
     &-item {
       padding: $spacer;
@@ -358,7 +365,7 @@ $background-color-disabled: #fbfbfb;
       border-color: $border-color-open;
     }
     .kaipkg-select__options {
-      display: block;
+      visibility: visible;
       opacity: 1;
       z-index: 2;
     }
@@ -371,7 +378,6 @@ $background-color-disabled: #fbfbfb;
           border-radius: $border-radius;
           background-color: $background-color-active;
           padding: 0 $spacer / 2;
-          flex: unset;
           .kaipkg-select__deselect {
             margin-left: $spacer/2;
           }
@@ -391,8 +397,6 @@ $background-color-disabled: #fbfbfb;
 .kaipkg--transparent {
   opacity: 0;
   position: absolute;
-  top: 0;
-  left: 0;
   z-index: -1;
 }
 
@@ -407,7 +411,7 @@ $background-color-disabled: #fbfbfb;
     content: "";
     width: 10px;
     height: 2px;
-    background-color: darken($border-color, 10%);
+    background-color: darken($border-color, 20%);
     position: absolute;
     top: 4px;
   }
@@ -415,13 +419,13 @@ $background-color-disabled: #fbfbfb;
     content: "";
     width: 2px;
     height: 10px;
-    background-color: darken($border-color, 10%);
+    background-color: darken($border-color, 20%);
     position: absolute;
     left: 4px;
   }
   &:hover, &:focus {
     &:before, &::after {
-      background-color: darken($border-color, 20%);
+      background-color: darken($border-color, 40%);
     }
   }
 }
