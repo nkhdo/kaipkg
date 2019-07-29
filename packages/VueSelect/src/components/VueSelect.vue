@@ -5,7 +5,7 @@
   >
     <div
       class="kaipkg-select__container"
-      @click.prevent.stop="handleContainerClick"
+      @click.prevent.stop="focus"
     >
       <div class="kaipkg-select__container-values">
         <div
@@ -21,7 +21,7 @@
             {{ labelFor(findOptionWithValue(val)) }}
           </slot>
           <a
-            v-if="clearable || multiple"
+            v-if="multiple"
             class="kaipkg-select__deselect"
             title="Deselect"
             @click.prevent.stop="deselectOption(val)"
@@ -35,14 +35,14 @@
           @focus="showOptionsSelect"
           @blur="hideOptionsSelect"
         >
-        <a
-          v-if="clearable && multiple && !empty"
-          class="kaipkg-select__deselect kaipkg-select__deselect-all"
-          title="Deselect all"
-          @click.prevent.stop="deselectAll()"
-        />
       </div>
-      <div class="kaipkg-select__container-arrow">
+      <div class="kaipkg-select__container-actions">
+        <a
+          v-if="clearable && !empty"
+          class="kaipkg-select__deselect kaipkg-select__deselect-all"
+          title="Clear"
+          @click.prevent.stop="clear()"
+        />
         <div class="kaipkg-select__arrow" />
       </div>
     </div>
@@ -68,7 +68,10 @@
         <span v-if="options.length === 0">
           No option...
         </span>
-        <span>
+        <span v-else-if="!!search">
+          No matching option...
+        </span>
+        <span v-else>
           No more option...
         </span>
       </div>
@@ -173,14 +176,22 @@ export default {
       return this.open || this.empty;
     },
     shownOptions() {
-      if (this.multiple) {
-        return this.options.filter(option => !this.isSelected(option));
+      // for multiple select, filter out the selected options
+      const options = this.multiple
+        ? this.options.filter(option => !this.isSelected(option))
+        : this.options;
+      if (!this.search) {
+        return options;
       }
-      return this.options;
+      // linear search
+      const lowercaseSearch = this.search.toLowerCase();
+      return options.filter(option => this.labelFor(option)
+        .toLowerCase()
+        .includes(lowercaseSearch));
     },
   },
   methods: {
-    handleContainerClick() {
+    focus() {
       this.$refs.inputElement.focus();
     },
     handleOptionClick(option) {
@@ -222,9 +233,11 @@ export default {
       }
       this.hideOptionsSelect();
     },
-    deselectAll() {
+    clear() {
       if (this.multiple) {
         this.$emit('input', []);
+      } else {
+        this.$emit('input', null);
       }
     },
     labelFor(option) {
@@ -297,8 +310,10 @@ $background-color-disabled: #fbfbfb;
       flex: 1;
     }
 
-    &-arrow {
+    &-actions {
       margin-left: auto;
+      display: flex;
+      align-items: center;
       .kaipkg-select__arrow {
         border-color: darken($border-color, 10%);
         border-style: solid;
@@ -419,5 +434,6 @@ $background-color-disabled: #fbfbfb;
 .kaipkg-select-text__muted {
   padding: $spacer;
   color: #666;
+  text-align: center;
 }
 </style>
