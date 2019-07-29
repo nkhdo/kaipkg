@@ -10,6 +10,7 @@
         :options="options"
         :clearable="clearable"
         :searchable="searchable"
+        :creatable="creatable"
         :disabled="disabled"
       />
       {{ singleValue }}
@@ -24,6 +25,7 @@
         :options="options"
         :clearable="clearable"
         :searchable="searchable"
+        :creatable="creatable"
         :disabled="disabled"
         multiple
       />
@@ -45,6 +47,14 @@
           type="checkbox"
         >
         <label for="clearable-checkbox">clearable</label>
+      </div>
+      <div>
+        <input
+          id="creatable-checkbox"
+          v-model="creatable"
+          type="checkbox"
+        >
+        <label for="creatable-checkbox">creatable</label>
       </div>
       <div>
         <input
@@ -90,6 +100,7 @@ export default {
       multipleValues: [],
       searchable: true,
       clearable: true,
+      creatable: false,
       disabled: false,
     };
   },

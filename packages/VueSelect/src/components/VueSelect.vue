@@ -52,7 +52,7 @@
         :key="valueFor(option)"
         class="kaipkg-select__options-item"
         :class="{ 'kaipkg-select__options-item__active': isSelected(option) }"
-        @mousedown="handleOptionClick(option)"
+        @mousedown.prevent.stop="handleOptionClick(option)"
       >
         <slot
           name="option"
@@ -61,20 +61,37 @@
           {{ labelFor(option) }}
         </slot>
       </div>
-      <div
+      <template
         v-if="shownOptions.length === 0"
-        class="kaipkg-select-text__muted"
       >
-        <span v-if="options.length === 0">
+        <div
+          v-if="allOptions.length === 0"
+          class="kaipkg-select-text__muted"
+        >
           No option...
-        </span>
-        <span v-else-if="!!search">
-          No matching option...
-        </span>
-        <span v-else>
+        </div>
+        <template v-else-if="!!search">
+          <div
+            v-if="creatable"
+            class="kaipkg-select__options-item"
+            @mousedown.prevent.stop="createOption(search)"
+          >
+            create "<strong>{{ search }}</strong>"
+          </div>
+          <div
+            v-else
+            class="kaipkg-select-text__muted"
+          >
+            No matching option...
+          </div>
+        </template>
+        <div
+          v-else
+          class="kaipkg-select-text__muted"
+        >
           No more option...
-        </span>
-      </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -121,11 +138,16 @@ export default {
       type: String,
       default: 'label',
     },
+    createOptionFn: {
+      type: Function,
+      default: value => value.trim(),
+    },
   },
   data() {
     return {
       search: '',
       open: false,
+      createdOptions: [],
     };
   },
   computed: {
@@ -178,11 +200,14 @@ export default {
       }
       return this.open || this.empty;
     },
+    allOptions() {
+      return [...this.options, ...this.createdOptions];
+    },
     shownOptions() {
       // for multiple select, filter out the selected options
       const options = this.multiple
-        ? this.options.filter(option => !this.isSelected(option))
-        : this.options;
+        ? this.allOptions.filter(option => !this.isSelected(option))
+        : this.allOptions;
       if (!this.searchable || !this.search) {
         return options;
       }
@@ -256,10 +281,17 @@ export default {
       return option;
     },
     findOptionWithValue(value) {
-      return this.options.find(option => this.valueFor(option) === value);
+      return this.allOptions.find(option => this.valueFor(option) === value);
     },
     isSelected(option) {
       return this.values.includes(this.valueFor(option));
+    },
+    createOption(value) {
+      const option = this.createOptionFn(value);
+      if (option) {
+        this.createdOptions.push(option);
+        this.selectOption(option);
+      }
     },
   },
 };
@@ -312,7 +344,6 @@ $background-color-disabled: #fbfbfb;
       padding: 0;
       background: transparent;
       flex: 1;
-      line-height: 1.4;
     }
 
     &-actions {
