@@ -183,7 +183,7 @@ export default {
         return this.placeholder;
       }
       if (this.multiple) {
-        return 'Search for...';
+        return 'Search...';
       }
       return this.labelFor(this.findOptionWithValue(this.value)) || this.placeholder;
     },
@@ -324,6 +324,7 @@ $box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 
 .kaipkg-select {
   position: relative;
+  min-width: 50px;
 
   &__container {
     border: 1px solid $border-color;
@@ -412,6 +413,12 @@ $box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
       &-item__active {
         background-color: $background-color-active;
       }
+    }
+  }
+
+  &:hover {
+    .kaipkg-select__container {
+      border-color: $border-color-open;
     }
   }
 
