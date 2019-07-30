@@ -16,7 +16,7 @@
         >
           <slot
             name="selected-option"
-            :selected-option="findOptionWithValue(val)"
+            :option="findOptionWithValue(val)"
           >
             {{ labelFor(findOptionWithValue(val)) }}
           </slot>
