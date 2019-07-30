@@ -192,7 +192,7 @@ export default {
         return [];
       }
       if (this.multiple) {
-        return this.value;
+        return this.value || [];
       }
       return [this.value];
     },
@@ -325,10 +325,10 @@ $box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 
 .kaipkg-select {
   position: relative;
-  min-width: 50px;
 
   &__container {
     border: 1px solid $border-color;
+    min-width: 50px;
     display: flex;
     align-items: center;
     padding: $spacer;
