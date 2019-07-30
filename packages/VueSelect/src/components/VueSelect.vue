@@ -222,6 +222,7 @@ export default {
       // linear search
       const lowercaseSearch = this.search.toLowerCase();
       return options.filter(option => this.labelFor(option)
+        .toString()
         .toLowerCase()
         .includes(lowercaseSearch));
     },
