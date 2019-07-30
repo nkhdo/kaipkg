@@ -47,51 +47,59 @@
       </div>
     </div>
     <div class="kaipkg-select__options">
-      <div
-        v-for="option in shownOptions"
-        :key="valueFor(option)"
-        class="kaipkg-select__options-item"
-        :class="{ 'kaipkg-select__options-item__active': isSelected(option) }"
-        @mousedown.prevent.stop="handleOptionClick(option)"
-      >
-        <slot
-          name="option"
-          :option="option"
-        >
-          {{ labelFor(option) }}
-        </slot>
+      <div class="kaipkg-select__options-header">
+        <slot name="options-header" />
       </div>
-      <template
-        v-if="shownOptions.length === 0"
-      >
+      <div class="kaipkg-select__options-body">
         <div
-          v-if="allOptions.length === 0"
-          class="kaipkg-select-text__muted"
+          v-for="option in shownOptions"
+          :key="valueFor(option)"
+          class="kaipkg-select__options-body-item"
+          :class="{ 'kaipkg-select__options-body-item__active': isSelected(option) }"
+          @mousedown.prevent.stop="handleOptionClick(option)"
         >
-          No option...
-        </div>
-        <template v-else-if="!!search">
-          <div
-            v-if="creatable"
-            class="kaipkg-select__options-item"
-            @mousedown.prevent.stop="createOption(search)"
+          <slot
+            name="option"
+            :option="option"
           >
-            create "<strong>{{ search }}</strong>"
+            {{ labelFor(option) }}
+          </slot>
+        </div>
+        <template
+          v-if="shownOptions.length === 0"
+        >
+          <div
+            v-if="allOptions.length === 0"
+            class="kaipkg-select-text__muted"
+          >
+            No option...
           </div>
+          <template v-else-if="!!search">
+            <div
+              v-if="creatable"
+              class="kaipkg-select__options-body-item"
+              @mousedown.prevent.stop="createOption(search)"
+            >
+              create "<strong>{{ search }}</strong>"
+            </div>
+            <div
+              v-else
+              class="kaipkg-select-text__muted"
+            >
+              No matching option...
+            </div>
+          </template>
           <div
             v-else
             class="kaipkg-select-text__muted"
           >
-            No matching option...
+            No more option...
           </div>
         </template>
-        <div
-          v-else
-          class="kaipkg-select-text__muted"
-        >
-          No more option...
-        </div>
-      </template>
+      </div>
+      <div class="kaipkg-select__options-footer">
+        <slot name="options-footer" />
+      </div>
     </div>
   </div>
 </template>
@@ -222,6 +230,9 @@ export default {
     focus() {
       this.$refs.inputElement.focus();
     },
+    blur() {
+      this.$refs.inputElement.blur();
+    },
     handleOptionClick(option) {
       if (this.multiple) {
         this.toggleOption(option);
@@ -309,6 +320,8 @@ $background-color-hover: #f5f6f7;
 $background-color-active: rgba(199, 224, 244, 0.35);
 $background-color-disabled: #fbfbfb;
 
+$box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+
 .kaipkg-select {
   position: relative;
 
@@ -326,11 +339,15 @@ $background-color-disabled: #fbfbfb;
       align-items: center;
       flex-wrap: wrap;
       flex: 1;
+      min-width: 0;
       margin-right: $spacer / 2;
       &-value {
         display: inline-flex;
         align-items: center;
         margin-right: $spacer / 2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         .kaipkg-select__deselect {
           margin-left: auto;
         }
@@ -344,6 +361,9 @@ $background-color-disabled: #fbfbfb;
       padding: 0;
       background: transparent;
       flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &-actions {
@@ -363,15 +383,15 @@ $background-color-disabled: #fbfbfb;
   }
 
   &__options {
+    box-sizing: border-box;
     border: 1px solid $border-color;
     border-radius: $border-radius;
     width: 100%;
-    max-height: 250px;
-    overflow: auto;
     position: absolute;
     top: 100%;
     left: 0;
     background-color: $background-color;
+    box-shadow: $box-shadow;
 
     visibility: hidden;
     opacity: 0;
@@ -379,15 +399,19 @@ $background-color-disabled: #fbfbfb;
 
     transition: all .1s ease-in-out;
 
-    &-item {
-      padding: $spacer;
-      cursor: pointer;
-      &:hover, &:focus {
-        background-color: $background-color-hover;
+    &-body {
+      max-height: 250px;
+      overflow: auto;
+      &-item {
+        padding: $spacer;
+        cursor: pointer;
+        &:hover, &:focus {
+          background-color: $background-color-hover;
+        }
       }
-    }
-    &-item__active {
-      background-color: $background-color-active;
+      &-item__active {
+        background-color: $background-color-active;
+      }
     }
   }
 
