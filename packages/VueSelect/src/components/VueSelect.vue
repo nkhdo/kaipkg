@@ -52,6 +52,7 @@
       </div>
       <div class="kaipkg-select__panel-body">
         <vue-select-options
+          v-if="!grouped"
           :values="values"
           :options="options"
           :label-key="labelKey"
@@ -73,9 +74,36 @@
             </slot>
           </template>
         </vue-select-options>
+        <template v-else>
+          <vue-select-options
+            v-for="group in options"
+            :key="group[groupKey]"
+            :group-label="group[groupKey]"
+            :values="values"
+            :options="group[optionsKey]"
+            :label-key="labelKey"
+            :value-key="valueKey"
+            :creatable="creatable"
+            :searchable="searchable"
+            :search="search"
+            :multiple="multiple"
+            :create-option-fn="createOptionFn"
+            @option-click="handleOptionClick"
+            @option-created="handleOptionCreated"
+          >
+            <template v-slot:default="{ option }">
+              <slot
+                name="option"
+                :option="option"
+              >
+                {{ labelFor(option) }}
+              </slot>
+            </template>
+          </vue-select-options>
+        </template>
       </div>
       <div class="kaipkg-select__panel-footer">
-        <slot name="options-footer" />
+        <slot name="panel-footer" />
       </div>
     </div>
   </div>
@@ -129,10 +157,6 @@ export default {
       type: String,
       default: 'label',
     },
-    groupKey: {
-      type: String,
-      default: '',
-    },
     createOptionFn: {
       type: Function,
       default: value => value.trim(),
@@ -140,6 +164,18 @@ export default {
     autofocus: {
       type: Boolean,
       default: false,
+    },
+    grouped: {
+      type: Boolean,
+      default: false,
+    },
+    groupKey: {
+      type: String,
+      default: 'group',
+    },
+    optionsKey: {
+      type: String,
+      default: 'options',
     },
   },
   data() {
@@ -200,6 +236,12 @@ export default {
       return this.open || this.empty;
     },
     allOptions() {
+      if (this.grouped) {
+        return [
+          ...this.options.reduce((total, current) => total.concat(current[this.optionsKey]), []),
+          ...this.createdOptions,
+        ];
+      }
       return [...this.options, ...this.createdOptions];
     },
   },

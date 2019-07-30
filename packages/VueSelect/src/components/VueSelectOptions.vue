@@ -1,6 +1,12 @@
 <template>
   <div class="kaipkg-select__options">
     <div
+      v-if="groupLabel"
+      class="kaipkg-select__options-group"
+    >
+      {{ groupLabel }}
+    </div>
+    <div
       v-for="option in shownOptions"
       :key="valueFor(option)"
       class="kaipkg-select__options-item"
@@ -47,6 +53,10 @@ import { valueFor, labelFor } from '../utils/options';
 export default {
   name: 'VueSelectOptions',
   props: {
+    groupLabel: {
+      type: String,
+      default: '',
+    },
     values: {
       type: Array,
       required: true,
@@ -125,7 +135,6 @@ export default {
     createOption(value) {
       const option = this.createOptionFn(value);
       if (option) {
-        // to-do: check if option exists before pushing
         this.createdOptions.push(option);
         this.$emit('option-created', option);
       }
@@ -138,8 +147,12 @@ export default {
 @import '../scss/variables';
 
 .kaipkg-select__options {
-  &-item {
+  &-group {
+    font-weight: 600;
     padding: $spacer;
+  }
+  &-item {
+    padding: $spacer $spacer * 2;
     cursor: pointer;
     &:hover, &:focus {
       background-color: $background-color-hover;
@@ -150,7 +163,7 @@ export default {
   }
 
   .kaipkg-select__text--muted {
-    padding: $spacer;
+    padding: 0 $spacer $spacer;
     color: #666;
     text-align: center;
   }
