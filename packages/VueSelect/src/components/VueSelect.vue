@@ -148,6 +148,10 @@ export default {
       type: Function,
       default: value => value.trim(),
     },
+    autofocus: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -231,6 +235,11 @@ export default {
       this.$emit('input', []);
     }
   },
+  mounted() {
+    if (this.autofocus) {
+      this.focus();
+    }
+  },
   methods: {
     focus() {
       this.$refs.inputElement.focus();
@@ -247,10 +256,12 @@ export default {
     },
     showOptionsSelect() {
       this.open = true;
+      this.$emit('focus');
     },
     hideOptionsSelect() {
       this.open = false;
       this.search = '';
+      this.$emit('blur');
     },
     toggleOption(option) {
       const value = this.valueFor(option);
@@ -305,6 +316,7 @@ export default {
     createOption(value) {
       const option = this.createOptionFn(value);
       if (option) {
+        // to-do: check if option exists before pushing
         this.createdOptions.push(option);
         this.selectOption(option);
       }
