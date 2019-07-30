@@ -69,26 +69,24 @@
           v-if="shownOptions.length === 0"
         >
           <div
-            v-if="allOptions.length === 0"
+            v-if="creatable && !!search"
+            class="kaipkg-select__options-body-item"
+            @mousedown.prevent.stop="createOption(search)"
+          >
+            create "<strong>{{ search }}</strong>"
+          </div>
+          <div
+            v-else-if="allOptions.length === 0"
             class="kaipkg-select-text__muted"
           >
             No option...
           </div>
-          <template v-else-if="!!search">
-            <div
-              v-if="creatable"
-              class="kaipkg-select__options-body-item"
-              @mousedown.prevent.stop="createOption(search)"
-            >
-              create "<strong>{{ search }}</strong>"
-            </div>
-            <div
-              v-else
-              class="kaipkg-select-text__muted"
-            >
-              No matching option...
-            </div>
-          </template>
+          <div
+            v-else-if="!!search"
+            class="kaipkg-select-text__muted"
+          >
+            No matching option...
+          </div>
           <div
             v-else
             class="kaipkg-select-text__muted"
