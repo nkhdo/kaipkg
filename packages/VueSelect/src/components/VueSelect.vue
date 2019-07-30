@@ -190,7 +190,7 @@ export default {
         return [];
       }
       if (this.multiple) {
-        return this.value || [];
+        return this.value;
       }
       return [this.value];
     },
@@ -224,6 +224,12 @@ export default {
         .toLowerCase()
         .includes(lowercaseSearch));
     },
+  },
+  created() {
+    // force input value of multiple select to be an array
+    if (this.multiple && !Array.isArray(this.value)) {
+      this.$emit('input', []);
+    }
   },
   methods: {
     focus() {

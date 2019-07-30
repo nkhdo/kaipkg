@@ -97,7 +97,7 @@ export default {
         },
       ],
       singleValue: null,
-      multipleValues: [],
+      multipleValues: null,
       searchable: true,
       clearable: true,
       creatable: false,
