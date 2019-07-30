@@ -12,7 +12,11 @@
         :searchable="searchable"
         :creatable="creatable"
         :disabled="disabled"
-      />
+      >
+        <template v-slot:option="{option}">
+          {{ option.label }} <i>({{ option.value }})</i>
+        </template>
+      </vue-select>
       {{ singleValue }}
     </div>
     <div

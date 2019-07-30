@@ -46,56 +46,35 @@
         <div class="kaipkg-select__arrow" />
       </div>
     </div>
-    <div class="kaipkg-select__options">
-      <div class="kaipkg-select__options-header">
-        <slot name="options-header" />
+    <div class="kaipkg-select__panel">
+      <div class="kaipkg-select__panel-header">
+        <slot name="panel-header" />
       </div>
-      <div class="kaipkg-select__options-body">
-        <div
-          v-for="option in shownOptions"
-          :key="valueFor(option)"
-          class="kaipkg-select__options-body-item"
-          :class="{ 'kaipkg-select__options-body-item__active': isSelected(option) }"
-          @mousedown.prevent.stop="handleOptionClick(option)"
+      <div class="kaipkg-select__panel-body">
+        <vue-select-options
+          :values="values"
+          :options="options"
+          :label-key="labelKey"
+          :value-key="valueKey"
+          :creatable="creatable"
+          :searchable="searchable"
+          :search="search"
+          :multiple="multiple"
+          :create-option-fn="createOptionFn"
+          @option-click="handleOptionClick"
+          @option-created="handleOptionCreated"
         >
-          <slot
-            name="option"
-            :option="option"
-          >
-            {{ labelFor(option) }}
-          </slot>
-        </div>
-        <template
-          v-if="shownOptions.length === 0"
-        >
-          <div
-            v-if="creatable && !!search"
-            class="kaipkg-select__options-body-item"
-            @mousedown.prevent.stop="createOption(search)"
-          >
-            create "<strong>{{ search }}</strong>"
-          </div>
-          <div
-            v-else-if="allOptions.length === 0"
-            class="kaipkg-select-text__muted"
-          >
-            No option...
-          </div>
-          <div
-            v-else-if="!!search"
-            class="kaipkg-select-text__muted"
-          >
-            No matching option...
-          </div>
-          <div
-            v-else
-            class="kaipkg-select-text__muted"
-          >
-            No more option...
-          </div>
-        </template>
+          <template v-slot:default="{ option }">
+            <slot
+              name="option"
+              :option="option"
+            >
+              {{ labelFor(option) }}
+            </slot>
+          </template>
+        </vue-select-options>
       </div>
-      <div class="kaipkg-select__options-footer">
+      <div class="kaipkg-select__panel-footer">
         <slot name="options-footer" />
       </div>
     </div>
@@ -103,8 +82,14 @@
 </template>
 
 <script>
+import VueSelectOptions from './VueSelectOptions.vue';
+import { labelFor, valueFor, findOptionWithValue } from '../utils/options';
+
 export default {
   name: 'VueSelect',
+  components: {
+    VueSelectOptions,
+  },
   props: {
     // eslint-disable-next-line vue/require-prop-types, vue/require-default-prop
     value: {},
@@ -143,6 +128,10 @@ export default {
     labelKey: {
       type: String,
       default: 'label',
+    },
+    groupKey: {
+      type: String,
+      default: '',
     },
     createOptionFn: {
       type: Function,
@@ -213,21 +202,6 @@ export default {
     allOptions() {
       return [...this.options, ...this.createdOptions];
     },
-    shownOptions() {
-      // for multiple select, filter out the selected options
-      const options = this.multiple
-        ? this.allOptions.filter(option => !this.isSelected(option))
-        : this.allOptions;
-      if (!this.searchable || !this.search) {
-        return options;
-      }
-      // linear search
-      const lowercaseSearch = this.search.toLowerCase();
-      return options.filter(option => this.labelFor(option)
-        .toString()
-        .toLowerCase()
-        .includes(lowercaseSearch));
-    },
   },
   created() {
     // force input value of multiple select to be an array
@@ -253,6 +227,10 @@ export default {
       } else {
         this.selectOption(option);
       }
+    },
+    handleOptionCreated(option) {
+      this.createdOptions.push(option);
+      this.selectOption(option);
     },
     showOptionsSelect() {
       this.open = true;
@@ -296,55 +274,29 @@ export default {
       }
     },
     labelFor(option) {
-      if (typeof option === 'object') {
-        return option[this.labelKey];
-      }
-      return option;
+      return labelFor(option);
     },
     valueFor(option) {
-      if (typeof option === 'object') {
-        return option[this.valueKey];
-      }
-      return option;
+      return valueFor(option);
     },
     findOptionWithValue(value) {
-      return this.allOptions.find(option => this.valueFor(option) === value);
-    },
-    isSelected(option) {
-      return this.values.includes(this.valueFor(option));
-    },
-    createOption(value) {
-      const option = this.createOptionFn(value);
-      if (option) {
-        // to-do: check if option exists before pushing
-        this.createdOptions.push(option);
-        this.selectOption(option);
-      }
+      return findOptionWithValue(this.allOptions, value);
     },
   },
 };
 </script>
 
 <style lang="scss">
-$spacer: .5rem;
-
-$border-color: #f0f0f0;
-$border-color-open: #80bdff;
-$border-radius: 4px;
-
-$background-color: #ffffff;
-$background-color-hover: #f5f6f7;
-$background-color-active: rgba(199, 224, 244, 0.35);
-$background-color-disabled: #fbfbfb;
-
-$box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+@import '../scss/variables';
 
 .kaipkg-select {
   position: relative;
 
   &__container {
-    border: 1px solid $border-color;
+    box-sizing: border-box;
+    width: 100%;
     min-width: 50px;
+    border: 1px solid $border-color;
     display: flex;
     align-items: center;
     padding: $spacer;
@@ -400,7 +352,7 @@ $box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
   }
 
-  &__options {
+  &__panel {
     box-sizing: border-box;
     border: 1px solid $border-color;
     border-radius: $border-radius;
@@ -418,7 +370,7 @@ $box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     transition: all .1s ease-in-out;
 
     &-body {
-      max-height: 250px;
+      max-height: 200px;
       overflow: auto;
       &-item {
         padding: $spacer;
@@ -443,7 +395,7 @@ $box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     .kaipkg-select__container {
       border-color: $border-color-open;
     }
-    .kaipkg-select__options {
+    .kaipkg-select__panel {
       visibility: visible;
       opacity: 1;
       z-index: 2;
@@ -512,11 +464,5 @@ $box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 .kaipkg-select__deselect-all {
   margin-left: auto;
   margin-right: $spacer / 2;
-}
-
-.kaipkg-select-text__muted {
-  padding: $spacer;
-  color: #666;
-  text-align: center;
 }
 </style>
