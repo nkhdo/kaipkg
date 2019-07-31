@@ -324,7 +324,7 @@ export default {
       return valueFor(option, this.valueKey);
     },
     findOptionWithValue(value) {
-      return findOptionWithValue(this.allOptions, value);
+      return findOptionWithValue(this.allOptions, value, this.valueKey);
     },
   },
 };

@@ -12,5 +12,5 @@ export const valueFor = (option, valueKey = 'value') => {
   return option;
 };
 
-export const findOptionWithValue = (options, value) => options
-  .find(option => valueFor(option) === value);
+export const findOptionWithValue = (options, value, valueKey = 'value') => options
+  .find(option => valueFor(option, valueKey) === value);
