@@ -14,12 +14,14 @@
           :key="val"
           class="kaipkg-select__container-values-value"
         >
-          <slot
-            name="selected-option"
-            :option="findOptionWithValue(val)"
-          >
-            {{ labelFor(findOptionWithValue(val)) }}
-          </slot>
+          <div class="kaipkg-select__container-values-value-text">
+            <slot
+              name="selected-option"
+              :option="findOptionWithValue(val)"
+            >
+              {{ labelFor(findOptionWithValue(val)) }}
+            </slot>
+          </div>
           <a
             v-if="multiple"
             class="kaipkg-select__deselect"
@@ -357,9 +359,15 @@ export default {
         display: inline-flex;
         align-items: center;
         margin-right: $spacer / 2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        box-sizing: border-box;
+        max-width: 100%;
+        &-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          flex: 1;
+          min-width: 0;
+        }
         .kaipkg-select__deselect {
           margin-left: auto;
         }
@@ -412,7 +420,7 @@ export default {
     transition: all .1s ease-in-out;
 
     &-body {
-      max-height: 200px;
+      max-height: 250px;
       overflow: auto;
       &-item {
         padding: $spacer;
