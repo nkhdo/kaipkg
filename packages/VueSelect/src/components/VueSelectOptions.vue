@@ -127,7 +127,7 @@ export default {
       return labelFor(option, this.labelKey);
     },
     isSelected(option) {
-      return this.values.includes(valueFor(option));
+      return this.values.includes(this.valueFor(option));
     },
     handleOptionClick(option) {
       this.$emit('option-click', option);
