@@ -316,10 +316,10 @@ export default {
       }
     },
     labelFor(option) {
-      return labelFor(option);
+      return labelFor(option, this.labelKey);
     },
     valueFor(option) {
-      return valueFor(option);
+      return valueFor(option, this.valueKey);
     },
     findOptionWithValue(value) {
       return findOptionWithValue(this.allOptions, value);

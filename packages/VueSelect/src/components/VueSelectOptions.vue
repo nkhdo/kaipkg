@@ -121,10 +121,10 @@ export default {
   },
   methods: {
     valueFor(option) {
-      return valueFor(option);
+      return valueFor(option, this.valueKey);
     },
     labelFor(option) {
-      return labelFor(option);
+      return labelFor(option, this.labelKey);
     },
     isSelected(option) {
       return this.values.includes(valueFor(option));
