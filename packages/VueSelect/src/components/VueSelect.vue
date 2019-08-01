@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="kaipkg-select"
-    :class="componentClasses"
-  >
+  <div :class="componentClasses">
     <div
       class="kaipkg-select__container"
       @click.prevent.stop="focus"
@@ -189,7 +186,9 @@ export default {
   computed: {
     componentClasses() {
       return {
+        'kaipkg-select': true,
         'kaipkg-select--open': this.open,
+        'kaipkg-select--empty': this.empty,
         'kaipkg-select--single': !this.multiple,
         'kaipkg-select--multiple': this.multiple,
         'kaipkg-select--disabled': this.disabled,
@@ -282,6 +281,7 @@ export default {
     hideOptionsSelect() {
       this.open = false;
       this.search = '';
+      this.blur();
       this.$emit('blur');
     },
     toggleOption(option) {
@@ -451,7 +451,7 @@ export default {
     }
   }
 
-  &.kaipkg-select--single {
+  &.kaipkg-select--single:not(.kaipkg-select--empty) {
     .kaipkg-select__container {
       &-input {
         position: absolute;
