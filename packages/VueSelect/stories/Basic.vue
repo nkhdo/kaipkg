@@ -13,6 +13,9 @@
         :creatable="creatable"
         :disabled="disabled"
       >
+        <template v-slot:selected-option="{option}">
+          {{ option.label }} <i>({{ option.value }})</i>
+        </template>
         <template v-slot:option="{option}">
           {{ option.label }} <i>({{ option.value }})</i>
         </template>

@@ -10,9 +10,8 @@
       <div class="kaipkg-select__container-values">
         <div
           v-for="val in values"
-          v-show="showValues"
           :key="val"
-          class="kaipkg-select__container-values-value"
+          :class="valueClasses"
         >
           <div class="kaipkg-select__container-values-value-text">
             <slot
@@ -191,8 +190,17 @@ export default {
     componentClasses() {
       return {
         'kaipkg-select--open': this.open,
+        'kaipkg-select--single': !this.multiple,
         'kaipkg-select--multiple': this.multiple,
         'kaipkg-select--disabled': this.disabled,
+      };
+    },
+    valueClasses() {
+      const isPlaceholder = !this.multiple && this.showInput;
+      return {
+        'kaipkg-select__container-values-value': true,
+        'kaipkg-select__placeholder': isPlaceholder,
+        'kaipkg--transparent': isPlaceholder && !!this.search,
       };
     },
     inputClasses() {
@@ -208,13 +216,10 @@ export default {
       return this.value === null || this.value === undefined;
     },
     inputPlaceholder() {
-      if (!this.open) {
+      if (!this.open || this.empty) {
         return this.placeholder;
       }
-      if (this.multiple) {
-        return 'Search...';
-      }
-      return this.labelFor(this.findOptionWithValue(this.value)) || this.placeholder;
+      return '';
     },
     values() {
       if (this.empty) {
@@ -224,12 +229,6 @@ export default {
         return this.value;
       }
       return [this.value];
-    },
-    showValues() {
-      if (!this.multiple) {
-        return !this.open || !this.searchable;
-      }
-      return true;
     },
     showInput() {
       if (!this.searchable) {
@@ -452,6 +451,14 @@ export default {
     }
   }
 
+  &.kaipkg-select--single {
+    .kaipkg-select__container {
+      &-input {
+        position: absolute;
+      }
+    }
+  }
+
   &.kaipkg-select--multiple {
     .kaipkg-select__container {
       &-values {
@@ -477,7 +484,7 @@ export default {
 
 .kaipkg--transparent {
   opacity: 0;
-  position: absolute;
+  width: 0;
   z-index: -1;
 }
 
@@ -514,5 +521,9 @@ export default {
 .kaipkg-select__deselect-all {
   margin-left: auto;
   margin-right: $spacer / 2;
+}
+
+.kaipkg-select__placeholder {
+  opacity: .4;
 }
 </style>
