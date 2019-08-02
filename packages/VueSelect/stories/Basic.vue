@@ -88,6 +88,10 @@ export default {
     return {
       options: [
         {
+          label: 'This is an option with "null" value',
+          value: null,
+        },
+        {
           label: 'Apple make the label longer longer',
           value: 'apple',
         },

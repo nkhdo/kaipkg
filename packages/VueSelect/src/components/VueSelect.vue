@@ -210,9 +210,9 @@ export default {
     },
     empty() {
       if (this.multiple) {
-        return (this.value || []).length === 0;
+        return this.value.length === 0;
       }
-      return this.value === null || this.value === undefined;
+      return this.findOptionWithValue(this.value) === undefined;
     },
     inputPlaceholder() {
       if (!this.open || this.empty) {
