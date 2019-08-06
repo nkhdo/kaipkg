@@ -386,7 +386,6 @@ export default {
       margin: 0;
       padding: 0;
       background: transparent;
-      flex: 1;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -461,8 +460,14 @@ export default {
 
   &.kaipkg-select--single:not(.kaipkg-select--empty) {
     .kaipkg-select__container {
-      &-input {
-        position: absolute;
+      &-values {
+        position: relative;
+        .kaipkg-select__container-input {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          right: 0;
+        }
       }
     }
   }
@@ -478,6 +483,9 @@ export default {
             margin-left: $spacer/2;
           }
         }
+      }
+      &-input {
+        flex: 1;
       }
     }
   }
