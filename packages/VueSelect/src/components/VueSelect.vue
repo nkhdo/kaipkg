@@ -406,9 +406,10 @@ export default {
     border: 1px solid $border-color;
     border-radius: $border-radius;
     width: 100%;
+    min-width: 100px;
     position: absolute;
     top: 100%;
-    left: 0;
+    right: 0;
     background-color: $background-color;
     box-shadow: $box-shadow;
 
