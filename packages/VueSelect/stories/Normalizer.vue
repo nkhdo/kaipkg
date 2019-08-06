@@ -12,14 +12,8 @@
         :searchable="searchable"
         :creatable="creatable"
         :disabled="disabled"
-      >
-        <template v-slot:selected-option="{option}">
-          {{ option.label }} <i>({{ option.value }})</i>
-        </template>
-        <template v-slot:option="{option}">
-          {{ option.label }} <i>({{ option.value }})</i>
-        </template>
-      </vue-select>
+        :normalizer="normalizer"
+      />
       {{ singleValue }}
     </div>
     <div
@@ -34,6 +28,7 @@
         :searchable="searchable"
         :creatable="creatable"
         :disabled="disabled"
+        :normalizer="normalizer"
         multiple
         autofocus
       />
@@ -80,7 +75,7 @@
 import VueSelect from '../src/components/VueSelect.vue';
 
 export default {
-  name: 'NormalizerStory',
+  name: 'BasicStory',
   components: {
     VueSelect,
   },
@@ -88,24 +83,24 @@ export default {
     return {
       options: [
         {
-          label: 'This is an option with "null" value',
-          value: null,
+          name: 'This is an option with "null" value',
+          id: null,
         },
         {
-          label: 'Apple make the label longer longer',
-          value: 'apple',
+          name: 'Apple make the label longer longer',
+          id: 'apple',
         },
         {
-          label: 'Orange make the label longer longer',
-          value: 'orange',
+          name: 'Orange make the label longer longer',
+          id: 'orange',
         },
         {
-          label: 'Pen long long long long long label',
-          value: 'pen',
+          name: 'Pen long long long long long label',
+          id: 'pen',
         },
         {
-          label: 'Bucket long again long long long long',
-          value: 'bucket',
+          name: 'Bucket long again long long long long',
+          id: 'bucket',
         },
       ],
       singleValue: null,
@@ -114,6 +109,12 @@ export default {
       clearable: true,
       creatable: false,
       disabled: false,
+      normalizer(option) {
+        return {
+          label: `${option.name} - ${option.id}`,
+          value: option.id,
+        };
+      },
     };
   },
 };

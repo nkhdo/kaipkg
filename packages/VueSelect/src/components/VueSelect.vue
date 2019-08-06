@@ -52,7 +52,7 @@
         <vue-select-options
           v-if="!grouped"
           :values="values"
-          :options="options"
+          :options="normalizeOptions(options)"
           :label-key="labelKey"
           :value-key="valueKey"
           :creatable="creatable"
@@ -78,7 +78,7 @@
             :key="group[groupKey]"
             :group-label="group[groupKey]"
             :values="values"
-            :options="group[optionsKey]"
+            :options="normalizeOptions(group[optionsKey])"
             :label-key="labelKey"
             :value-key="valueKey"
             :creatable="creatable"
@@ -175,6 +175,10 @@ export default {
       type: String,
       default: 'options',
     },
+    normalizer: {
+      type: Function,
+      default: option => option,
+    },
   },
   data() {
     return {
@@ -210,7 +214,7 @@ export default {
     },
     empty() {
       if (this.multiple) {
-        return this.value.length === 0;
+        return (this.value || []).length === 0;
       }
       return this.findOptionWithValue(this.value) === undefined;
     },
@@ -242,7 +246,7 @@ export default {
           ...this.createdOptions,
         ];
       }
-      return [...this.options, ...this.createdOptions];
+      return [...this.options, ...this.createdOptions].map(this.normalizer);
     },
   },
   created() {
@@ -324,6 +328,9 @@ export default {
     },
     findOptionWithValue(value) {
       return findOptionWithValue(this.allOptions, value, this.valueKey);
+    },
+    normalizeOptions(options) {
+      return options.map(this.normalizer);
     },
   },
 };
