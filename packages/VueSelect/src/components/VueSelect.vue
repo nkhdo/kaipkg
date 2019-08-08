@@ -251,8 +251,36 @@ export default {
   },
   created() {
     // force input value of multiple select to be an array
-    if (this.multiple && !Array.isArray(this.value)) {
-      this.$emit('input', []);
+    let values = this.multiple ? this.value : [this.value];
+    if (this.multiple && !Array.isArray(values)) {
+      values = [];
+      this.$emit('input', values);
+    } else {
+      // handle values not in options
+      const valuesNotInOptions = [];
+      values.forEach((value) => {
+        if (this.findOptionWithValue(value) === undefined) {
+          valuesNotInOptions.push(value);
+        }
+      });
+      if (valuesNotInOptions.length > 0) {
+        if (this.creatable) {
+          // create options
+          valuesNotInOptions.forEach((value) => {
+            const option = this.createOptionFn(value);
+            if (option !== undefined) {
+              this.createdOptions.push(option);
+            }
+          });
+        } else if (this.multiple) {
+          // filter out the value
+          this.$emit('input', this.value.filter(v => !valuesNotInOptions.includes(v)));
+        } else {
+          // for single select, just clear the value,
+          // since it must be the only one value
+          this.$emit('input', null);
+        }
+      }
     }
   },
   mounted() {
@@ -276,7 +304,7 @@ export default {
     },
     handleOptionCreated(option) {
       this.createdOptions.push(option);
-      this.selectOption(option);
+      this.handleOptionClick(option);
     },
     showOptionsSelect() {
       this.open = true;

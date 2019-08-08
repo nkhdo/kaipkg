@@ -134,7 +134,7 @@ export default {
     },
     createOption(value) {
       const option = this.createOptionFn(value);
-      if (option) {
+      if (option !== undefined) {
         this.createdOptions.push(option);
         this.$emit('option-created', option);
       }
