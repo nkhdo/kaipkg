@@ -303,6 +303,7 @@ export default {
       }
     },
     handleOptionCreated(option) {
+      this.$emit('option-created', option);
       this.createdOptions.push(option);
       this.handleOptionClick(option);
     },
