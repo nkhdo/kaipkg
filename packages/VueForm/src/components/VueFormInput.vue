@@ -23,16 +23,16 @@ export default {
     const id = getInputId(schema, formId);
     const label = getInputLabel(schema);
     return createElement('div', {
-      class: 'kaipkg-input',
+      class: 'vue-input',
     }, [
       createElement('label', {
-        class: 'kaipkg-input-label',
+        class: 'vue-input-label',
         attrs: {
           for: id,
         },
       }, label),
       createElement(component, {
-        class: 'kaipkg-input-el',
+        class: 'vue-input-el',
         attrs: {
           id,
         },

@@ -1,13 +1,13 @@
 @import 'variables';
 
-.kaipkg-form {
+.vue-form {
   display: flex;
   flex-direction: column;
   padding: $spacer;
   background-color: $form-bg-color;
   font-size: $font-size;
 
-  .kaipkg-input {
+  .vue-input {
     &:not(:first-child) {
       margin-top: .5rem;
     }

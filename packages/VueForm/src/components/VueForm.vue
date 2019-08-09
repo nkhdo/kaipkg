@@ -1,7 +1,7 @@
 <template>
   <form
     :id="formId"
-    class="kaipkg-form"
+    class="vue-form"
     @submit="submit"
   >
     <vue-form-input
@@ -13,11 +13,11 @@
     />
     <div
       v-if="!noSubmitButton"
-      class="kaipkg-input"
+      class="vue-input"
     >
       <slot name="submit-button">
         <input
-          class="kaipkg-input-el"
+          class="vue-input-el"
           type="submit"
           value="Submit"
         >

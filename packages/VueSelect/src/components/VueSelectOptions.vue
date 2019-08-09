@@ -1,16 +1,16 @@
 <template>
-  <div class="kaipkg-select__options">
+  <div class="vue-select__options">
     <div
       v-if="groupLabel"
-      class="kaipkg-select__options-group"
+      class="vue-select__options-group"
     >
       {{ groupLabel }}
     </div>
     <div
       v-for="option in shownOptions"
       :key="valueFor(option)"
-      class="kaipkg-select__options-item"
-      :class="{ 'kaipkg-select__options-item--active': isSelected(option) }"
+      class="vue-select__options-item"
+      :class="{ 'vue-select__options-item--active': isSelected(option) }"
       @mousedown.prevent.stop="handleOptionClick(option)"
     >
       <slot :option="option" />
@@ -20,26 +20,26 @@
     >
       <div
         v-if="creatable && !!search"
-        class="kaipkg-select__options-item"
+        class="vue-select__options-item"
         @mousedown.prevent.stop="createOption(search)"
       >
         create "<strong>{{ search }}</strong>"
       </div>
       <div
         v-else-if="allOptions.length === 0"
-        class="kaipkg-select__text--muted"
+        class="vue-select__text--muted"
       >
         No option...
       </div>
       <div
         v-else-if="!!search"
-        class="kaipkg-select__text--muted"
+        class="vue-select__text--muted"
       >
         No matching option...
       </div>
       <div
         v-else
-        class="kaipkg-select__text--muted"
+        class="vue-select__text--muted"
       >
         No more option...
       </div>
@@ -146,7 +146,7 @@ export default {
 <style lang="scss">
 @import '../scss/variables';
 
-.kaipkg-select__options {
+.vue-select__options {
   &-group {
     font-weight: 600;
     padding: $spacer;
@@ -165,7 +165,7 @@ export default {
     background-color: $background-color-active;
   }
 
-  .kaipkg-select__text--muted {
+  .vue-select__text--muted {
     padding: 0 $spacer $spacer;
     color: #666;
     text-align: center;

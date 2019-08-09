@@ -1,16 +1,16 @@
 <template>
   <div :class="componentClasses">
     <div
-      class="kaipkg-select__container"
+      class="vue-select__container"
       @click.prevent.stop="focus"
     >
-      <div class="kaipkg-select__container-values">
+      <div class="vue-select__container-values">
         <div
           v-for="val in values"
           :key="val"
           :class="valueClasses"
         >
-          <div class="kaipkg-select__container-values-value-text">
+          <div class="vue-select__container-values-value-text">
             <slot
               name="selected-option"
               :option="findOrCreateOptionWithValue(val)"
@@ -20,7 +20,7 @@
           </div>
           <a
             v-if="multiple"
-            class="kaipkg-select__deselect"
+            class="vue-select__deselect"
             title="Deselect"
             @click.prevent.stop="deselectOption(val)"
           />
@@ -35,24 +35,24 @@
           @keydown="handleKeyDown"
         >
       </div>
-      <div class="kaipkg-select__container-actions">
+      <div class="vue-select__container-actions">
         <a
           v-if="clearable && !empty"
-          class="kaipkg-select__deselect kaipkg-select__deselect-all"
+          class="vue-select__deselect vue-select__deselect-all"
           title="Clear"
           @click.prevent.stop="clear()"
         />
-        <div class="kaipkg-select__arrow" />
+        <div class="vue-select__arrow" />
       </div>
     </div>
     <div
       ref="panel"
-      class="kaipkg-select__panel"
+      class="vue-select__panel"
     >
-      <div class="kaipkg-select__panel-header">
+      <div class="vue-select__panel-header">
         <slot name="panel-header" />
       </div>
-      <div class="kaipkg-select__panel-body">
+      <div class="vue-select__panel-body">
         <vue-select-options
           v-if="!grouped"
           :values="values"
@@ -104,7 +104,7 @@
           </vue-select-options>
         </template>
       </div>
-      <div class="kaipkg-select__panel-footer">
+      <div class="vue-select__panel-footer">
         <slot name="panel-footer" />
       </div>
     </div>
@@ -200,26 +200,26 @@ export default {
   computed: {
     componentClasses() {
       return {
-        'kaipkg-select': true,
-        'kaipkg-select--open': this.open,
-        'kaipkg-select--empty': this.empty,
-        'kaipkg-select--single': !this.multiple,
-        'kaipkg-select--multiple': this.multiple,
-        'kaipkg-select--disabled': this.disabled,
+        'vue-select': true,
+        'vue-select--open': this.open,
+        'vue-select--empty': this.empty,
+        'vue-select--single': !this.multiple,
+        'vue-select--multiple': this.multiple,
+        'vue-select--disabled': this.disabled,
       };
     },
     valueClasses() {
       const isPlaceholder = !this.multiple && this.showInput;
       return {
-        'kaipkg-select__container-values-value': true,
-        'kaipkg-select__placeholder': isPlaceholder,
-        'kaipkg--transparent': isPlaceholder && !!this.search,
+        'vue-select__container-values-value': true,
+        'vue-select__placeholder': isPlaceholder,
+        'vue-select--transparent': isPlaceholder && !!this.search,
       };
     },
     inputClasses() {
       return {
-        'kaipkg-select__container-input': true,
-        'kaipkg--transparent': !this.showInput,
+        'vue-select__container-input': true,
+        'vue-select--transparent': !this.showInput,
       };
     },
     empty() {
@@ -369,7 +369,7 @@ export default {
 <style lang="scss">
 @import '../scss/variables';
 
-.kaipkg-select {
+.vue-select {
   position: relative;
 
   &__container {
@@ -404,7 +404,7 @@ export default {
           flex: 1;
           min-width: 0;
         }
-        .kaipkg-select__deselect {
+        .vue-select__deselect {
           margin-left: auto;
         }
       }
@@ -425,7 +425,7 @@ export default {
       margin-left: auto;
       display: flex;
       align-items: center;
-      .kaipkg-select__arrow {
+      .vue-select__arrow {
         border-color: darken($border-color, 20%);
         border-style: solid;
         border-width: 0 2px 2px 0;
@@ -472,27 +472,27 @@ export default {
   }
 
   &:hover {
-    .kaipkg-select__container {
+    .vue-select__container {
       border-color: $border-color-open;
     }
   }
 
-  &.kaipkg-select--open {
-    .kaipkg-select__container {
+  &.vue-select--open {
+    .vue-select__container {
       border-color: $border-color-open;
     }
-    .kaipkg-select__panel {
+    .vue-select__panel {
       visibility: visible;
       opacity: 1;
       z-index: 2;
     }
   }
 
-  &.kaipkg-select--single:not(.kaipkg-select--empty) {
-    .kaipkg-select__container {
+  &.vue-select--single:not(.vue-select--empty) {
+    .vue-select__container {
       &-values {
         position: relative;
-        .kaipkg-select__container-input {
+        .vue-select__container-input {
           position: absolute;
           width: 100%;
           left: 0;
@@ -502,14 +502,14 @@ export default {
     }
   }
 
-  &.kaipkg-select--multiple {
-    .kaipkg-select__container {
+  &.vue-select--multiple {
+    .vue-select__container {
       &-values {
         &-value {
           border-radius: $border-radius;
           background-color: $background-color-active;
           padding: 0 $spacer / 2;
-          .kaipkg-select__deselect {
+          .vue-select__deselect {
             margin-left: $spacer/2;
           }
         }
@@ -520,21 +520,21 @@ export default {
     }
   }
 
-  &.kaipkg-select--disabled {
+  &.vue-select--disabled {
     pointer-events: none;
-    .kaipkg-select__container {
+    .vue-select__container {
       background-color: $background-color-disabled;
     }
   }
 }
 
-.kaipkg--transparent {
+.vue-select--transparent {
   opacity: 0;
   width: 0;
   z-index: -1;
 }
 
-.kaipkg-select__deselect {
+.vue-select__deselect {
   cursor: pointer;
   position: relative;
   display: inline-block;
@@ -564,12 +564,12 @@ export default {
   }
 }
 
-.kaipkg-select__deselect-all {
+.vue-select__deselect-all {
   margin-left: auto;
   margin-right: $spacer / 2;
 }
 
-.kaipkg-select__placeholder {
+.vue-select__placeholder {
   opacity: .4;
 }
 </style>

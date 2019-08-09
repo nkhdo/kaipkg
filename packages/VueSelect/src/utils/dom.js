@@ -8,9 +8,9 @@ export const KEY_CODES = {
 };
 
 export const OPTION_CLASSES = {
-  OPTION: 'kaipkg-select__options-item',
-  ACTIVE: 'kaipkg-select__options-item--active',
-  FOCUS: 'kaipkg-select__options-item--focus',
+  OPTION: 'vue-select__options-item',
+  ACTIVE: 'vue-select__options-item--active',
+  FOCUS: 'vue-select__options-item--focus',
 };
 
 export const isElement = el => el && el.nodeType === Node.ELEMENT_NODE;
