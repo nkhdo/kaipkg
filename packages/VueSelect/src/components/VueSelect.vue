@@ -334,7 +334,11 @@ export default {
     findOrCreateOptionWithValue(value) {
       const option = this.findOptionWithValue(value);
       if (option === undefined && value !== null && value !== undefined) {
-        return this.createOptionFn(value);
+        try {
+          return this.createOptionFn(value.toString());
+        } catch (err) {
+          return option;
+        }
       }
       return option;
     },
