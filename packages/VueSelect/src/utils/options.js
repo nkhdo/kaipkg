@@ -75,9 +75,9 @@ export const selectCurrentOption = (container) => {
   if (!isElement(container)) {
     return;
   }
-  const currentOption = getCurrentOption(container);
+  let currentOption = getCurrentOption(container);
   if (!currentOption) {
-    return;
+    [currentOption] = getAllOptions(container);
   }
   triggerEvent(currentOption, 'mousedown');
 };
