@@ -13,9 +13,9 @@
           <div class="kaipkg-select__container-values-value-text">
             <slot
               name="selected-option"
-              :option="findOptionWithValue(val)"
+              :option="findOrCreateOptionWithValue(val)"
             >
-              {{ labelFor(findOptionWithValue(val)) }}
+              {{ labelFor(findOrCreateOptionWithValue(val)) }}
             </slot>
           </div>
           <a
@@ -216,7 +216,8 @@ export default {
       if (this.multiple) {
         return (this.value || []).length === 0;
       }
-      return this.findOptionWithValue(this.value) === undefined;
+      return [null, undefined].includes(this.value)
+        && this.findOptionWithValue(this.value) === undefined;
     },
     inputPlaceholder() {
       if (!this.open || this.empty) {
@@ -251,36 +252,8 @@ export default {
   },
   created() {
     // force input value of multiple select to be an array
-    let values = this.multiple ? this.value : [this.value];
-    if (this.multiple && !Array.isArray(values)) {
-      values = [];
-      this.$emit('input', values);
-    } else {
-      // handle values not in options
-      const valuesNotInOptions = [];
-      values.forEach((value) => {
-        if (this.findOptionWithValue(value) === undefined) {
-          valuesNotInOptions.push(value);
-        }
-      });
-      if (valuesNotInOptions.length > 0) {
-        if (this.creatable) {
-          // create options
-          valuesNotInOptions.forEach((value) => {
-            const option = this.createOptionFn(value);
-            if (option !== undefined) {
-              this.createdOptions.push(option);
-            }
-          });
-        } else if (this.multiple) {
-          // filter out the value
-          this.$emit('input', this.value.filter(v => !valuesNotInOptions.includes(v)));
-        } else {
-          // for single select, just clear the value,
-          // since it must be the only one value
-          this.$emit('input', null);
-        }
-      }
+    if (this.multiple && !Array.isArray(this.value)) {
+      this.$emit('input', []);
     }
   },
   mounted() {
@@ -357,6 +330,13 @@ export default {
     },
     findOptionWithValue(value) {
       return findOptionWithValue(this.allOptions, value, this.valueKey);
+    },
+    findOrCreateOptionWithValue(value) {
+      const option = this.findOptionWithValue(value);
+      if (option === undefined) {
+        return this.createOptionFn(value);
+      }
+      return option;
     },
     normalizeOptions(options) {
       return options.map(this.normalizer);
