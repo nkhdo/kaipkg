@@ -333,7 +333,7 @@ export default {
     },
     findOrCreateOptionWithValue(value) {
       const option = this.findOptionWithValue(value);
-      if (option === undefined) {
+      if (option === undefined && value !== null && value !== undefined) {
         return this.createOptionFn(value);
       }
       return option;
