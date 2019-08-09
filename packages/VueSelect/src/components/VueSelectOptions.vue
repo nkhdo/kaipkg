@@ -154,9 +154,12 @@ export default {
   &-item {
     padding: $spacer $spacer * 2;
     cursor: pointer;
-    &:hover, &:focus {
+    &:hover {
       background-color: $background-color-hover;
     }
+  }
+  &-item--focus {
+    background-color: $background-color-hover;
   }
   &-item--active {
     background-color: $background-color-active;

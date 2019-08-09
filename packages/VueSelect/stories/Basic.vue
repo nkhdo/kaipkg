@@ -35,7 +35,6 @@
         :creatable="creatable"
         :disabled="disabled"
         multiple
-        autofocus
       />
       {{ multipleValues }}
     </div>

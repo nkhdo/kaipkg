@@ -32,6 +32,7 @@
           :class="inputClasses"
           @focus="showOptionsSelect"
           @blur="hideOptionsSelect"
+          @keydown="handleKeyDown"
         >
       </div>
       <div class="kaipkg-select__container-actions">
@@ -44,7 +45,10 @@
         <div class="kaipkg-select__arrow" />
       </div>
     </div>
-    <div class="kaipkg-select__panel">
+    <div
+      ref="panel"
+      class="kaipkg-select__panel"
+    >
       <div class="kaipkg-select__panel-header">
         <slot name="panel-header" />
       </div>
@@ -109,7 +113,13 @@
 
 <script>
 import VueSelectOptions from './VueSelectOptions.vue';
-import { labelFor, valueFor, findOptionWithValue } from '../utils/options';
+import {
+  labelFor,
+  valueFor,
+  findOptionWithValue,
+  handleKeyDown,
+  clearFocus,
+} from '../utils/options';
 
 export default {
   name: 'VueSelect',
@@ -288,6 +298,7 @@ export default {
       this.open = false;
       this.search = '';
       this.blur();
+      clearFocus(this.$refs.panel);
       this.$emit('blur');
     },
     toggleOption(option) {
@@ -344,6 +355,12 @@ export default {
     },
     normalizeOptions(options) {
       return options.map(this.normalizer);
+    },
+    handleKeyDown(evt) {
+      if (this.open) {
+        const { panel } = this.$refs;
+        handleKeyDown(evt, panel, this.searchable);
+      }
     },
   },
 };
