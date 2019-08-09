@@ -2,7 +2,7 @@
   "name": "@kaipkg/vue-select",
   "description": "a simple, lightweight select component",
   "author": "Hoang Do <me@kaid.sh>",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "repository": {
     "type": "git",
     "url": "https://github.com/nkhdo/kaipkg",
