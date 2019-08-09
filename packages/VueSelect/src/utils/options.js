@@ -1,5 +1,12 @@
 import {
-  KEY_CODES, OPTION_CLASSES, isElement, addClass, removeClass, findElIndex, triggerEvent,
+  KEY_CODES,
+  OPTION_CLASSES,
+  isElement,
+  addClass,
+  removeClass,
+  findElIndex,
+  triggerEvent,
+  scrollIntoView,
 } from './dom';
 
 export const labelFor = (option, labelKey = 'label') => {
@@ -25,23 +32,31 @@ export const getAllOptions = container => container.querySelectorAll(`.${OPTION_
 export const getCurrentOption = container => container.querySelector(`.${OPTION_CLASSES.FOCUS}`)
     || container.querySelector(`.${OPTION_CLASSES.ACTIVE}`);
 
+export const scrollToOption = (container, option) => {
+  if (!isElement(option)) {
+    return;
+  }
+  scrollIntoView(container.querySelector('.vue-select__panel-body'), option);
+};
+
 export const focusNextOption = (container) => {
   if (!isElement(container)) {
     return;
   }
   const allOptions = getAllOptions(container);
   const currentOption = getCurrentOption(container);
-  if (!currentOption) {
-    addClass(allOptions[0], OPTION_CLASSES.FOCUS);
-  } else {
-    removeClass(currentOption, OPTION_CLASSES.FOCUS);
+  let nextIdx = 0;
+  if (currentOption) {
     const idx = findElIndex(allOptions, currentOption);
-    let nextIdx = idx + 1;
+    nextIdx = idx + 1;
     if (nextIdx >= allOptions.length) {
       nextIdx = 0;
     }
-    addClass(allOptions[nextIdx], OPTION_CLASSES.FOCUS);
+    removeClass(currentOption, OPTION_CLASSES.FOCUS);
   }
+  const nextOption = allOptions[nextIdx];
+  addClass(nextOption, OPTION_CLASSES.FOCUS);
+  scrollToOption(container, nextOption);
 };
 
 export const focusPreviousOption = (container) => {
@@ -50,17 +65,18 @@ export const focusPreviousOption = (container) => {
   }
   const allOptions = getAllOptions(container);
   const currentOption = getCurrentOption(container);
-  if (!currentOption) {
-    addClass(allOptions[0], OPTION_CLASSES.FOCUS);
-  } else {
-    removeClass(currentOption, OPTION_CLASSES.FOCUS);
+  let prevIdx = allOptions.length - 1;
+  if (currentOption) {
     const idx = findElIndex(allOptions, currentOption);
-    let prevIdx = idx - 1;
+    prevIdx = idx - 1;
     if (prevIdx < 0) {
       prevIdx = allOptions.length - 1;
     }
-    addClass(allOptions[prevIdx], OPTION_CLASSES.FOCUS);
+    removeClass(currentOption, OPTION_CLASSES.FOCUS);
   }
+  const prevOption = allOptions[prevIdx];
+  addClass(prevOption, OPTION_CLASSES.FOCUS);
+  scrollToOption(container, prevOption);
 };
 
 export const clearFocus = (container) => {

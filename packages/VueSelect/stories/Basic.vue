@@ -106,6 +106,26 @@ export default {
           label: 'Bucket long again long long long long',
           value: 'bucket',
         },
+        {
+          label: 'Other option',
+          value: 'other_1',
+        },
+        {
+          label: 'Other option 2',
+          value: 'other_2',
+        },
+        {
+          label: 'Other option 3',
+          value: 'other_3',
+        },
+        {
+          label: 'Other option 4',
+          value: 'other_4',
+        },
+        {
+          label: 'Other option 5',
+          value: 'other_5',
+        },
       ],
       singleValue: 'kaid',
       multipleValues: ['kaid'],

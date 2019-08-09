@@ -52,3 +52,21 @@ export const findElIndex = (elements, el) => {
   }
   return -1;
 };
+
+// from react-select
+export const scrollIntoView = (container, el) => {
+  const scrollingRect = container.getBoundingClientRect();
+  const focusedRect = el.getBoundingClientRect();
+  const overScroll = el.offsetHeight / 3;
+
+  if (focusedRect.bottom + overScroll > scrollingRect.bottom) {
+    // eslint-disable-next-line no-param-reassign
+    container.scrollTop = Math.min(
+      el.offsetTop + el.clientHeight - container.offsetHeight + overScroll,
+      container.scrollHeight,
+    );
+  } else if (focusedRect.top - overScroll < scrollingRect.top) {
+    // eslint-disable-next-line no-param-reassign
+    container.scrollTop = Math.max(el.offsetTop - overScroll, 0);
+  }
+}
