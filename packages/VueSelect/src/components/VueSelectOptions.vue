@@ -9,6 +9,7 @@
     <div
       v-for="option in shownOptions"
       :key="valueFor(option)"
+      :data-value="valueFor(option)"
       class="vue-select__options-item"
       :class="{ 'vue-select__options-item--active': isSelected(option) }"
       @mousedown.prevent.stop="handleOptionClick(option)"
