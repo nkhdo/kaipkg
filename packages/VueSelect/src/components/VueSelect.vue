@@ -43,6 +43,7 @@
           @click.prevent.stop="clear()"
         />
         <div class="vue-select__arrow" />
+        <slot name="actions" />
       </div>
     </div>
     <div
