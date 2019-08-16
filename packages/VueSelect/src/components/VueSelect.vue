@@ -489,7 +489,7 @@ export default {
     }
   }
 
-  &.vue-select--single:not(.vue-select--empty) {
+  &.vue-select--single:not(.vue-select--empty:not(.vue-select--open)) {
     .vue-select__container {
       &-values {
         position: relative;
