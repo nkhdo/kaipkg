@@ -332,6 +332,7 @@ export default {
       } else {
         this.$emit('input', null);
       }
+      this.$emit('clear');
     },
     labelFor(option) {
       return labelFor(option, this.labelKey);
