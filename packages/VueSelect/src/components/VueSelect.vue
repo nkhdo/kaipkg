@@ -36,6 +36,7 @@
         >
       </div>
       <div class="vue-select__container-actions">
+        <slot name="actions" />
         <a
           v-if="clearable && !empty"
           class="vue-select__deselect vue-select__deselect-all"
@@ -43,7 +44,6 @@
           @click.prevent.stop="clear()"
         />
         <div class="vue-select__arrow" />
-        <slot name="actions" />
       </div>
     </div>
     <div
