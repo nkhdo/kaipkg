@@ -16,18 +16,18 @@
     >
       <slot :option="option" />
     </div>
+    <div
+      v-if="creatable && !!search"
+      class="vue-select__options-item"
+      @mousedown.prevent.stop="createOption(search)"
+    >
+      create "<strong>{{ search }}</strong>"
+    </div>
     <template
-      v-if="shownOptions.length === 0"
+      v-else-if="shownOptions.length === 0"
     >
       <div
-        v-if="creatable && !!search"
-        class="vue-select__options-item"
-        @mousedown.prevent.stop="createOption(search)"
-      >
-        create "<strong>{{ search }}</strong>"
-      </div>
-      <div
-        v-else-if="allOptions.length === 0"
+        v-if="allOptions.length === 0"
         class="vue-select__text--muted"
       >
         No option...
@@ -49,10 +49,11 @@
 </template>
 
 <script>
-import { valueFor, labelFor } from '../utils/options';
+import optionsMixin from '../mixins/options';
 
 export default {
   name: 'VueSelectOptions',
+  mixins: [optionsMixin],
   props: {
     groupLabel: {
       type: String,
@@ -121,12 +122,6 @@ export default {
     },
   },
   methods: {
-    valueFor(option) {
-      return valueFor(option, this.valueKey);
-    },
-    labelFor(option) {
-      return labelFor(option, this.labelKey);
-    },
     isSelected(option) {
       return this.values.includes(this.valueFor(option));
     },
@@ -135,6 +130,15 @@ export default {
     },
     createOption(value) {
       const option = this.createOptionFn(value);
+      if (option === undefined) {
+        // no option created
+        return;
+      }
+      if (this.findOptionWithValue(this.valueFor(option)) !== undefined) {
+        // duplicated option
+        this.$emit('option-click', option);
+        return;
+      }
       if (option !== undefined) {
         this.createdOptions.push(option);
         this.$emit('option-created', option);

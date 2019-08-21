@@ -113,20 +113,16 @@
 </template>
 
 <script>
+import optionsMixin from '../mixins/options';
 import VueSelectOptions from './VueSelectOptions.vue';
-import {
-  labelFor,
-  valueFor,
-  findOptionWithValue,
-  handleKeyDown,
-  clearFocus,
-} from '../utils/options';
+import { handleKeyDown, clearFocus } from '../utils/options';
 
 export default {
   name: 'VueSelect',
   components: {
     VueSelectOptions,
   },
+  mixins: [optionsMixin],
   props: {
     // eslint-disable-next-line vue/require-prop-types, vue/require-default-prop
     value: {},
@@ -334,15 +330,6 @@ export default {
         this.$emit('input', null);
       }
       this.$emit('clear');
-    },
-    labelFor(option) {
-      return labelFor(option, this.labelKey);
-    },
-    valueFor(option) {
-      return valueFor(option, this.valueKey);
-    },
-    findOptionWithValue(value) {
-      return findOptionWithValue(this.allOptions, value, this.valueKey);
     },
     findOrCreateOptionWithValue(value) {
       const option = this.findOptionWithValue(value);
