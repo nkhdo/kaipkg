@@ -276,11 +276,7 @@ export default {
       this.$refs.inputElement.blur();
     },
     handleOptionClick(option) {
-      if (this.multiple) {
-        this.toggleOption(option);
-      } else {
-        this.selectOption(option);
-      }
+      this.selectOption(option);
     },
     handleOptionCreated(option) {
       this.$emit('option-created', option);
@@ -298,18 +294,12 @@ export default {
       clearFocus(this.$refs.panel);
       this.$emit('blur');
     },
-    toggleOption(option) {
-      const value = this.valueFor(option);
-      if (this.values.includes(value)) {
-        this.deselectOption(value);
-      } else {
-        this.selectOption(option);
-      }
-    },
     selectOption(option) {
       const value = this.valueFor(option);
       if (this.multiple) {
-        this.$emit('input', [...this.value, value]);
+        if (!this.values.includes(value)) {
+          this.$emit('input', [...this.value, value]);
+        }
       } else {
         this.$emit('input', value);
       }
