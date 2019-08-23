@@ -82,6 +82,7 @@
             v-for="group in options"
             :key="group[groupKey]"
             :group-label="group[groupKey]"
+            :collapsible="groupCollapsible"
             :values="values"
             :options="normalizeOptions(group[optionsKey])"
             :label-key="labelKey"
@@ -171,6 +172,10 @@ export default {
       default: false,
     },
     grouped: {
+      type: Boolean,
+      default: false,
+    },
+    groupCollapsible: {
       type: Boolean,
       default: false,
     },
@@ -404,15 +409,6 @@ export default {
       margin-left: auto;
       display: flex;
       align-items: center;
-      .vue-select__arrow {
-        border-color: darken($border-color, 20%);
-        border-style: solid;
-        border-width: 0 2px 2px 0;
-        width: 5px;
-        height: 5px;
-        transform: rotate(45deg);
-        margin: 0 0 3px 0;
-      }
     }
   }
 
@@ -505,50 +501,61 @@ export default {
       background-color: $background-color-disabled;
     }
   }
-}
 
-.vue-select--transparent {
-  opacity: 0;
-  width: 0;
-  z-index: -1;
-}
+  &__arrow {
+    border-color: darken($border-color, 20%);
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    width: 5px;
+    height: 5px;
+    transform: rotate(45deg);
+    margin: 0 0 3px 0;
+    transition: .1s transform linear;
+  }
 
-.vue-select__deselect {
-  cursor: pointer;
-  position: relative;
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  transform: rotate(45deg);
-  &:before {
-    content: "";
+  &__deselect {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
     width: 10px;
-    height: 2px;
-    background-color: darken($border-color, 20%);
-    position: absolute;
-    top: 4px;
-  }
-  &:after {
-    content: "";
-    width: 2px;
     height: 10px;
-    background-color: darken($border-color, 20%);
-    position: absolute;
-    left: 4px;
-  }
-  &:hover, &:focus {
-    &:before, &::after {
-      background-color: darken($border-color, 40%);
+    transform: rotate(45deg);
+    &:before {
+      content: "";
+      width: 10px;
+      height: 2px;
+      background-color: darken($border-color, 20%);
+      position: absolute;
+      top: 4px;
+    }
+    &:after {
+      content: "";
+      width: 2px;
+      height: 10px;
+      background-color: darken($border-color, 20%);
+      position: absolute;
+      left: 4px;
+    }
+    &:hover, &:focus {
+      &:before, &::after {
+        background-color: darken($border-color, 40%);
+      }
     }
   }
-}
 
-.vue-select__deselect-all {
-  margin-left: auto;
-  margin-right: $spacer / 2;
-}
+  &--transparent {
+    opacity: 0;
+    width: 0;
+    z-index: -1;
+  }
 
-.vue-select__placeholder {
-  opacity: .4;
+  &__deselect-all {
+    margin-left: auto;
+    margin-right: $spacer / 2;
+  }
+
+  &__placeholder {
+    opacity: .4;
+  }
 }
 </style>

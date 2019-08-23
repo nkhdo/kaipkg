@@ -2,49 +2,60 @@
   <div class="vue-select__options">
     <div
       v-if="groupLabel"
-      class="vue-select__options-group"
-    >
-      {{ groupLabel }}
-    </div>
-    <div
-      v-for="option in shownOptions"
-      :key="valueFor(option)"
-      :data-value="valueFor(option)"
-      class="vue-select__options-item"
-      :class="{ 'vue-select__options-item--active': isSelected(option) }"
-      @mousedown.prevent.stop="handleOptionClick(option)"
-    >
-      <slot :option="option" />
-    </div>
-    <div
-      v-if="creatable && !!search"
-      class="vue-select__options-item"
-      @mousedown.prevent.stop="createOption(search)"
-    >
-      create "<strong>{{ search }}</strong>"
-    </div>
-    <template
-      v-else-if="shownOptions.length === 0"
+      class="vue-select__options-item vue-select__options-group"
+      :data-show="showOptionsPanel"
+      @mousedown.stop.prevent="toggleShow"
     >
       <div
-        v-if="allOptions.length === 0"
-        class="vue-select__text--muted"
+        v-if="collapsible"
+        class="vue-select__arrow"
+        :class="{ rotated: !showOptionsPanel }"
+      />
+      <span>
+        {{ groupLabel }}
+      </span>
+    </div>
+    <div v-if="showOptionsPanel">
+      <div
+        v-for="option in shownOptions"
+        :key="valueFor(option)"
+        :data-value="valueFor(option)"
+        class="vue-select__options-item"
+        :class="{ 'vue-select__options-item--active': isSelected(option) }"
+        @mousedown.prevent.stop="handleOptionClick(option)"
       >
-        No option...
+        <slot :option="option" />
       </div>
       <div
-        v-else-if="!!search"
-        class="vue-select__text--muted"
+        v-if="creatable && !!search"
+        class="vue-select__options-item"
+        @mousedown.prevent.stop="createOption(search)"
       >
-        No matching option...
+        create "<strong>{{ search }}</strong>"
       </div>
-      <div
-        v-else
-        class="vue-select__text--muted"
+      <template
+        v-else-if="shownOptions.length === 0"
       >
-        No more option...
-      </div>
-    </template>
+        <div
+          v-if="allOptions.length === 0"
+          class="vue-select__text--muted"
+        >
+          No option...
+        </div>
+        <div
+          v-else-if="!!search"
+          class="vue-select__text--muted"
+        >
+          No matching option...
+        </div>
+        <div
+          v-else
+          class="vue-select__text--muted"
+        >
+          No more option...
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -87,6 +98,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    collapsible: {
+      type: Boolean,
+      default: false,
+    },
     search: {
       type: String,
       required: true,
@@ -98,6 +113,10 @@ export default {
   },
   data() {
     return {
+      showOptions: {
+        noSearch: true,
+        search: true,
+      },
       createdOptions: [],
     };
   },
@@ -119,6 +138,21 @@ export default {
         .toString()
         .toLowerCase()
         .includes(lowercaseSearch));
+    },
+    showOptionsPanel() {
+      if (!this.collapsible) {
+        return true;
+      }
+      return this.search ? this.showOptions.search : this.showOptions.noSearch;
+    },
+  },
+  watch: {
+    search: {
+      handler(val) {
+        if (val) {
+          this.showOptions.search = this.shownOptions.length > 0;
+        }
+      },
     },
   },
   methods: {
@@ -144,6 +178,16 @@ export default {
         this.$emit('option-created', option);
       }
     },
+    toggleShow() {
+      if (!this.collapsible) {
+        return;
+      }
+      if (this.search) {
+        this.showOptions.search = !this.showOptions.search;
+      } else {
+        this.showOptions.noSearch = !this.showOptions.noSearch;
+      }
+    },
   },
 };
 </script>
@@ -152,10 +196,6 @@ export default {
 @import '../scss/variables';
 
 .vue-select__options {
-  &-group {
-    font-weight: 600;
-    padding: $spacer;
-  }
   &-item {
     padding: $spacer $spacer * 2;
     cursor: pointer;
@@ -168,6 +208,18 @@ export default {
   }
   &-item--active {
     background-color: $background-color-active;
+  }
+
+  &-group {
+    font-weight: 600;
+    padding: $spacer;
+    .vue-select__arrow {
+      display: inline-block;
+      margin-right: $spacer/2;
+      &.rotated {
+        transform: rotate(-45deg);
+      }
+    }
   }
 
   .vue-select__text--muted {

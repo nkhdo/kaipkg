@@ -7,6 +7,7 @@
       :clearable="clearable"
       :searchable="searchable"
       :creatable="creatable"
+      :group-collapsible="collapsible"
       :disabled="disabled"
     >
       <template v-slot:panel-header>
@@ -43,6 +44,14 @@
           type="checkbox"
         >
         <label for="creatable-checkbox">creatable</label>
+      </div>
+      <div>
+        <input
+          id="collapsible-checkbox"
+          v-model="collapsible"
+          type="checkbox"
+        >
+        <label for="collapsible-checkbox">group collapsible</label>
       </div>
       <div>
         <input
@@ -98,6 +107,7 @@ export default {
       searchable: true,
       clearable: true,
       creatable: false,
+      collapsible: true,
       disabled: false,
     };
   },

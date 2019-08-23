@@ -1,13 +1,20 @@
 import {
   KEY_CODES,
-  OPTION_CLASSES,
   isElement,
   addClass,
   removeClass,
+  hasClass,
   findElIndex,
   triggerEvent,
   scrollIntoView,
 } from './dom';
+
+export const OPTION_CLASSES = {
+  OPTION: 'vue-select__options-item',
+  ACTIVE: 'vue-select__options-item--active',
+  FOCUS: 'vue-select__options-item--focus',
+  GROUP: 'vue-select__options-group',
+};
 
 export const labelFor = (option, labelKey = 'label') => {
   if (typeof option === 'object') {
@@ -98,6 +105,32 @@ export const selectCurrentOption = (container) => {
   triggerEvent(currentOption, 'mousedown');
 };
 
+export const closeGroupIfPossible = (container) => {
+  if (!isElement(container)) {
+    return;
+  }
+  let currentOption = getCurrentOption(container);
+  if (!currentOption) {
+    [currentOption] = getAllOptions(container);
+  }
+  if (hasClass(currentOption, OPTION_CLASSES.GROUP) && currentOption.dataset.show) {
+    triggerEvent(currentOption, 'mousedown');
+  }
+};
+
+export const openGroupIfPossible = (container) => {
+  if (!isElement(container)) {
+    return;
+  }
+  let currentOption = getCurrentOption(container);
+  if (!currentOption) {
+    [currentOption] = getAllOptions(container);
+  }
+  if (hasClass(currentOption, OPTION_CLASSES.GROUP) && !currentOption.dataset.show) {
+    triggerEvent(currentOption, 'mousedown');
+  }
+};
+
 export const handleKeyDown = (evt, container, searchable = false) => {
   switch (evt.keyCode) {
     case KEY_CODES.DOWN:
@@ -111,6 +144,14 @@ export const handleKeyDown = (evt, container, searchable = false) => {
     case KEY_CODES.ENTER:
       evt.preventDefault();
       selectCurrentOption(container);
+      break;
+    case KEY_CODES.LEFT:
+      evt.preventDefault();
+      closeGroupIfPossible(container);
+      break;
+    case KEY_CODES.RIGHT:
+      evt.preventDefault();
+      openGroupIfPossible(container);
       break;
     case KEY_CODES.TAB:
       break;

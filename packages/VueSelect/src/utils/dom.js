@@ -7,12 +7,6 @@ export const KEY_CODES = {
   DOWN: 40,
 };
 
-export const OPTION_CLASSES = {
-  OPTION: 'vue-select__options-item',
-  ACTIVE: 'vue-select__options-item--active',
-  FOCUS: 'vue-select__options-item--focus',
-};
-
 export const isElement = el => el && el.nodeType === Node.ELEMENT_NODE;
 
 export const triggerEvent = (el, type) => {
@@ -42,6 +36,13 @@ export const removeClass = (el, className) => {
   if (isElement(el)) {
     el.classList.remove(className);
   }
+};
+
+export const hasClass = (el, className) => {
+  if (isElement(el)) {
+    return el.classList.contains(className);
+  }
+  return false;
 };
 
 export const findElIndex = (elements, el) => {
