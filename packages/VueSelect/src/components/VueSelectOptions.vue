@@ -110,12 +110,16 @@ export default {
       type: Function,
       required: true,
     },
+    initiallyExpanded: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       showOptions: {
-        noSearch: true,
-        search: true,
+        noSearch: this.initiallyExpanded,
+        search: false,
       },
       createdOptions: [],
     };

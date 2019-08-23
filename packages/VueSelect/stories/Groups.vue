@@ -79,6 +79,7 @@ export default {
       options: [
         {
           group: 'Asea',
+          initiallyExpanded: true,
           options: [
             {
               label: 'Vietnam',

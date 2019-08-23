@@ -83,6 +83,7 @@
             :key="group[groupKey]"
             :group-label="group[groupKey]"
             :collapsible="groupCollapsible"
+            :initially-expanded="group.initiallyExpanded"
             :values="values"
             :options="normalizeOptions(group[optionsKey])"
             :label-key="labelKey"
