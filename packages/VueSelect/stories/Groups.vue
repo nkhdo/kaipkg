@@ -9,6 +9,7 @@
       :creatable="creatable"
       :group-collapsible="collapsible"
       :disabled="disabled"
+      autofocus
     >
       <template v-slot:panel-header>
         Panel header slot
@@ -39,19 +40,19 @@
       </div>
       <div>
         <input
-          id="creatable-checkbox"
-          v-model="creatable"
-          type="checkbox"
-        >
-        <label for="creatable-checkbox">creatable</label>
-      </div>
-      <div>
-        <input
           id="collapsible-checkbox"
           v-model="collapsible"
           type="checkbox"
         >
         <label for="collapsible-checkbox">group collapsible</label>
+      </div>
+      <div>
+        <input
+          id="creatable-checkbox"
+          v-model="creatable"
+          type="checkbox"
+        >
+        <label for="creatable-checkbox">creatable</label>
       </div>
       <div>
         <input
