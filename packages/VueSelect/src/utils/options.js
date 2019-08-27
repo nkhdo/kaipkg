@@ -43,7 +43,8 @@ export const scrollToOption = (container, option) => {
   if (!isElement(option)) {
     return;
   }
-  scrollIntoView(container.querySelector('.vue-select__panel-body'), option);
+  const scrollBody = container.querySelector('.vue-select__panel-body');
+  scrollIntoView(scrollBody, option);
 };
 
 export const focusNextOption = (container) => {

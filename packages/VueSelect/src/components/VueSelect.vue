@@ -432,6 +432,7 @@ export default {
     transition: all .1s ease-in-out;
 
     &-body {
+      position: relative;
       max-height: 250px;
       overflow: auto;
       &-item {
