@@ -306,7 +306,7 @@ export default {
         if (!this.values.includes(value)) {
           this.$emit('input', [...this.value, value]);
         }
-      } else {
+      } else if (value !== this.value) {
         this.$emit('input', value);
       }
       this.hideOptionsSelect();
