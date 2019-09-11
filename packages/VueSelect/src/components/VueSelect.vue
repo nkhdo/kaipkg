@@ -2,7 +2,7 @@
   <div :class="componentClasses">
     <div
       class="vue-select__container"
-      @click.prevent.stop="focus"
+      @mousedown.prevent.stop="focus"
     >
       <div class="vue-select__container-values">
         <div
@@ -117,7 +117,7 @@
 <script>
 import optionsMixin from '../mixins/options';
 import VueSelectOptions from './VueSelectOptions.vue';
-import { handleKeyDown, clearFocus } from '../utils/options';
+import { handleKeyDown, clearFocus as clearOptionFocus } from '../utils/options';
 
 export default {
   name: 'VueSelect',
@@ -277,9 +277,11 @@ export default {
   methods: {
     focus() {
       this.$refs.inputElement.focus();
+      this.showOptionsSelect();
     },
     blur() {
       this.$refs.inputElement.blur();
+      this.hideOptionsSelect();
     },
     handleOptionClick(option) {
       this.selectOption(option);
@@ -290,15 +292,18 @@ export default {
       this.handleOptionClick(option);
     },
     showOptionsSelect() {
-      this.open = true;
-      this.$emit('focus');
+      if (!this.open) {
+        this.open = true;
+        this.$emit('focus');
+      }
     },
     hideOptionsSelect() {
-      this.open = false;
-      this.search = '';
-      this.blur();
-      clearFocus(this.$refs.panel);
-      this.$emit('blur');
+      if (this.open) {
+        this.open = false;
+        this.search = '';
+        clearOptionFocus(this.$refs.panel);
+        this.$emit('blur');
+      }
     },
     selectOption(option) {
       const value = this.valueFor(option);
