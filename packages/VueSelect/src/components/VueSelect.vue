@@ -2,7 +2,7 @@
   <div :class="componentClasses">
     <div
       class="vue-select__container"
-      @mousedown.prevent.stop="focus"
+      @click.prevent="focus"
     >
       <div class="vue-select__container-values">
         <div
