@@ -3,6 +3,8 @@
     <div
       class="vue-select__container"
       @click.prevent="focus"
+      @mousedown.prevent="preventHideOptions = true"
+      @mouseup.prevent="preventHideOptions = false"
     >
       <div class="vue-select__container-values">
         <div
@@ -31,7 +33,7 @@
           :placeholder="inputPlaceholder"
           :class="inputClasses"
           @focus="showOptionsSelect"
-          @blur="hideOptionsSelect"
+          @blur="onBlur"
           @keydown="handleKeyDown"
         >
       </div>
@@ -172,6 +174,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    closeOnSelect: {
+      type: Boolean,
+      default: true,
+    },
     grouped: {
       type: Boolean,
       default: false,
@@ -297,13 +303,23 @@ export default {
         this.$emit('focus');
       }
     },
-    hideOptionsSelect() {
-      if (this.open) {
-        this.open = false;
-        this.search = '';
-        clearOptionFocus(this.$refs.panel);
-        this.$emit('blur');
+    onBlur() {
+      this.$emit('blur');
+
+      if (this.closeOnSelect) {
+        this.hideOptionsSelect();
       }
+
+      if (this.preventHideOptions) {
+        this.preventHideOptions = false;
+      } else {
+        this.hideOptionsSelect();
+      }
+    },
+    hideOptionsSelect() {
+      this.open = false;
+      this.search = '';
+      clearOptionFocus(this.$refs.panel);
     },
     selectOption(option) {
       const value = this.valueFor(option);
@@ -314,7 +330,9 @@ export default {
       } else if (value !== this.value) {
         this.$emit('input', value);
       }
-      this.hideOptionsSelect();
+      if (this.closeOnSelect) {
+        this.hideOptionsSelect();
+      }
     },
     deselectOption(value) {
       if (this.multiple) {
@@ -322,7 +340,9 @@ export default {
       } else {
         this.$emit('input', null);
       }
-      this.hideOptionsSelect();
+      if (this.closeOnSelect) {
+        this.hideOptionsSelect();
+      }
     },
     clear() {
       if (this.multiple) {

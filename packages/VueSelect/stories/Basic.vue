@@ -37,6 +37,7 @@
         :searchable="searchable"
         :creatable="creatable"
         :disabled="disabled"
+        :close-on-select="closeOnSelect"
         multiple
       />
       {{ multipleValues }}
@@ -73,6 +74,14 @@
           type="checkbox"
         >
         <label for="disabled-checkbox">disabled</label>
+      </div>
+      <div>
+        <input
+          id="closeOnSelect-checkbox"
+          v-model="closeOnSelect"
+          type="checkbox"
+        >
+        <label for="closeOnSelect-checkbox">closeOnSelect</label>
       </div>
     </div>
   </div>
@@ -136,6 +145,7 @@ export default {
       clearable: true,
       creatable: true,
       disabled: false,
+      closeOnSelect: true,
     };
   },
 };
