@@ -12,6 +12,8 @@
         :searchable="searchable"
         :creatable="creatable"
         :disabled="disabled"
+        :close-on-select="closeOnSelect"
+        :options-select-visible="optionsSelectVisible"
       >
         <template v-slot:actions>
           Custom action
@@ -38,6 +40,7 @@
         :creatable="creatable"
         :disabled="disabled"
         :close-on-select="closeOnSelect"
+        :options-select-visible="optionsSelectVisible"
         multiple
       />
       {{ multipleValues }}
@@ -82,6 +85,15 @@
           type="checkbox"
         >
         <label for="closeOnSelect-checkbox">closeOnSelect</label>
+      </div>
+
+      <div>
+        <input
+          id="optionsSelectVisible-checkbox"
+          v-model="optionsSelectVisible"
+          type="checkbox"
+        >
+        <label for="optionsSelectVisible-checkbox">optionsSelectVisible</label>
       </div>
     </div>
   </div>
@@ -146,6 +158,7 @@ export default {
       creatable: true,
       disabled: false,
       closeOnSelect: true,
+      optionsSelectVisible: true,
     };
   },
 };
