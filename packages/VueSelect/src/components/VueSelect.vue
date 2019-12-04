@@ -45,7 +45,10 @@
           title="Clear"
           @click.prevent.stop="clear()"
         />
-        <div class="vue-select__arrow" />
+        <div
+          v-if="optionsSelectVisible"
+          class="vue-select__arrow"
+        />
       </div>
     </div>
     <div
@@ -178,6 +181,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    optionsSelectVisible: {
+      type: Boolean,
+      default: true,
+    },
     grouped: {
       type: Boolean,
       default: false,
@@ -210,7 +217,7 @@ export default {
     componentClasses() {
       return {
         'vue-select': true,
-        'vue-select--open': this.open,
+        'vue-select--open': this.optionsSelectVisible && this.open,
         'vue-select--empty': this.empty,
         'vue-select--single': !this.multiple,
         'vue-select--multiple': this.multiple,
@@ -296,6 +303,7 @@ export default {
       this.$emit('option-created', option);
       this.createdOptions.push(option);
       this.handleOptionClick(option);
+      this.showOptionsSelect();
     },
     showOptionsSelect() {
       if (!this.open) {
@@ -318,7 +326,6 @@ export default {
     },
     hideOptionsSelect() {
       this.open = false;
-      this.search = '';
       clearOptionFocus(this.$refs.panel);
     },
     selectOption(option) {
@@ -330,6 +337,7 @@ export default {
       } else if (value !== this.value) {
         this.$emit('input', value);
       }
+      this.search = '';
       if (this.closeOnSelect) {
         this.hideOptionsSelect();
       }
