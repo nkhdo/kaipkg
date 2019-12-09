@@ -12,6 +12,7 @@
         :searchable="searchable"
         :creatable="creatable"
         :disabled="disabled"
+        :close-on-select="closeOnSelect"
       >
         <template v-slot:actions>
           Custom action

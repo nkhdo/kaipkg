@@ -296,6 +296,7 @@ export default {
       this.$emit('option-created', option);
       this.createdOptions.push(option);
       this.handleOptionClick(option);
+      this.showOptionsSelect();
     },
     showOptionsSelect() {
       if (!this.open) {
@@ -318,7 +319,6 @@ export default {
     },
     hideOptionsSelect() {
       this.open = false;
-      this.search = '';
       clearOptionFocus(this.$refs.panel);
     },
     selectOption(option) {
@@ -330,6 +330,7 @@ export default {
       } else if (value !== this.value) {
         this.$emit('input', value);
       }
+      this.search = '';
       if (this.closeOnSelect) {
         this.hideOptionsSelect();
       }
