@@ -103,7 +103,7 @@ export const selectCurrentOption = (container) => {
   if (!currentOption) {
     [currentOption] = getAllOptions(container);
   }
-  triggerEvent(currentOption, 'mousedown');
+  triggerEvent(currentOption, 'keyup');
 };
 
 export const closeGroupIfPossible = (container) => {

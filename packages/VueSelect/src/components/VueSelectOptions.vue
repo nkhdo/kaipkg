@@ -22,6 +22,7 @@
         :data-value="valueFor(option)"
         class="vue-select__options-item"
         :class="{ 'vue-select__options-item--active': isSelected(option) }"
+        @keyup.prevent.stop="handleOptionSelect(option)"
         @mousedown.prevent.stop="handleOptionClick(option)"
       >
         <slot :option="option" />
@@ -29,6 +30,7 @@
       <div
         v-if="creatable && !!search"
         class="vue-select__options-item"
+        @keyup.prevent.stop="createOption(search)"
         @mousedown.prevent.stop="createOption(search)"
       >
         create "<strong>{{ search }}</strong>"
@@ -162,6 +164,9 @@ export default {
   methods: {
     isSelected(option) {
       return this.values.includes(this.valueFor(option));
+    },
+    handleOptionSelect(option) {
+      this.$emit('option-select', option);
     },
     handleOptionClick(option) {
       this.$emit('option-click', option);

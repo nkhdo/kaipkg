@@ -67,7 +67,8 @@
           :search="search"
           :multiple="multiple"
           :create-option-fn="createOptionFn"
-          @option-click="handleOptionClick"
+          @option-click="selectOption"
+          @option-select="option => selectOption(option)"
           @option-created="handleOptionCreated"
         >
           <template v-slot:default="{ option }">
@@ -95,7 +96,8 @@
             :search="search"
             :multiple="multiple"
             :create-option-fn="createOptionFn"
-            @option-click="handleOptionClick"
+            @option-click="selectOption"
+            @option-select="option => selectOption(option)"
             @option-created="handleOptionCreated"
           >
             <template v-slot:default="{ option }">
@@ -289,14 +291,10 @@ export default {
       this.$refs.inputElement.blur();
       this.hideOptionsSelect();
     },
-    handleOptionClick(option) {
-      this.selectOption(option);
-    },
     handleOptionCreated(option) {
       this.$emit('option-created', option);
       this.createdOptions.push(option);
-      this.handleOptionClick(option);
-      this.showOptionsSelect();
+      this.selectOption(option);
     },
     showOptionsSelect() {
       if (!this.open) {
@@ -368,10 +366,9 @@ export default {
       return options.map(this.normalizer);
     },
     handleKeyDown(evt) {
-      if (this.open) {
-        const { panel } = this.$refs;
-        handleKeyDown(evt, panel, this.searchable);
-      }
+      this.open = true;
+      const { panel } = this.$refs;
+      handleKeyDown(evt, panel, this.searchable);
     },
   },
 };
