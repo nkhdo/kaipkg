@@ -168,7 +168,7 @@ export default {
     },
     createOptionFn: {
       type: Function,
-      default: value => value.trim(),
+      default: (value) => value.trim(),
     },
     autofocus: {
       type: Boolean,
@@ -196,7 +196,7 @@ export default {
     },
     normalizer: {
       type: Function,
-      default: option => option,
+      default: (option) => option,
     },
   },
   data() {
@@ -336,7 +336,7 @@ export default {
     },
     deselectOption(value) {
       if (this.multiple) {
-        this.$emit('input', this.value.filter(v => v !== value));
+        this.$emit('input', this.value.filter((v) => v !== value));
       } else {
         this.$emit('input', null);
       }

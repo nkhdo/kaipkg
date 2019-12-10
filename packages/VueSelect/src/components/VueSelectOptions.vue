@@ -131,14 +131,14 @@ export default {
     shownOptions() {
       // for multiple select, filter out the selected options
       const options = this.multiple
-        ? this.allOptions.filter(option => !this.isSelected(option))
+        ? this.allOptions.filter((option) => !this.isSelected(option))
         : this.allOptions;
       if (!this.searchable || !this.search) {
         return options;
       }
       // linear search
       const lowercaseSearch = this.search.toLowerCase();
-      return options.filter(option => this.labelFor(option)
+      return options.filter((option) => this.labelFor(option)
         .toString()
         .toLowerCase()
         .includes(lowercaseSearch));
