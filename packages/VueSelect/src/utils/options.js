@@ -31,12 +31,12 @@ export const valueFor = (option, valueKey = 'value') => {
 };
 
 export const findOptionWithValue = (options, value, valueKey = 'value') => options
-  .find(option => valueFor(option, valueKey) === value);
+  .find((option) => valueFor(option, valueKey) === value);
 
 // DOM
-export const getAllOptions = container => container.querySelectorAll(`.${OPTION_CLASSES.OPTION}`);
+export const getAllOptions = (container) => container.querySelectorAll(`.${OPTION_CLASSES.OPTION}`);
 
-export const getCurrentOption = container => container.querySelector(`.${OPTION_CLASSES.FOCUS}`)
+export const getCurrentOption = (container) => container.querySelector(`.${OPTION_CLASSES.FOCUS}`)
     || container.querySelector(`.${OPTION_CLASSES.ACTIVE}`);
 
 export const scrollToOption = (container, option) => {
@@ -144,6 +144,7 @@ export const handleKeyDown = (evt, container, searchable = false) => {
       break;
     case KEY_CODES.ENTER:
       evt.preventDefault();
+      evt.stopPropagation();
       selectCurrentOption(container);
       break;
     case KEY_CODES.LEFT:

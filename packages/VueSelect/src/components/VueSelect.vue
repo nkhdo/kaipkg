@@ -304,8 +304,6 @@ export default {
       }
     },
     onBlur() {
-      this.$emit('blur');
-
       if (this.closeOnSelect) {
         this.hideOptionsSelect();
       }
@@ -317,11 +315,15 @@ export default {
       }
     },
     hideOptionsSelect() {
-      this.open = false;
-      this.search = '';
-      clearOptionFocus(this.$refs.panel);
+      if (this.open) {
+        this.open = false;
+        this.search = '';
+        clearOptionFocus(this.$refs.panel);
+        this.$emit('blur');
+      }
     },
     selectOption(option) {
+      this.search = '';
       const value = this.valueFor(option);
       if (this.multiple) {
         if (!this.values.includes(value)) {

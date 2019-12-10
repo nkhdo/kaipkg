@@ -12,6 +12,8 @@
         :searchable="searchable"
         :creatable="creatable"
         :disabled="disabled"
+        @focus="onFocus"
+        @blur="onBlur"
       >
         <template v-slot:actions>
           Custom action
@@ -39,6 +41,8 @@
         :disabled="disabled"
         :close-on-select="closeOnSelect"
         multiple
+        @focus="onFocus"
+        @blur="onBlur"
       />
       {{ multipleValues }}
     </div>
@@ -147,6 +151,14 @@ export default {
       disabled: false,
       closeOnSelect: true,
     };
+  },
+  methods: {
+    onFocus() {
+      console.log('focus');
+    },
+    onBlur() {
+      console.log('blur');
+    },
   },
 };
 </script>
