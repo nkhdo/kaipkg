@@ -119,7 +119,8 @@
 <script>
 import optionsMixin from '../mixins/options';
 import VueSelectOptions from './VueSelectOptions.vue';
-import { handleKeyDown, clearFocus as clearOptionFocus } from '../utils/options';
+import { handleKeyDown as navigateOptions, clearFocus as clearOptionFocus } from '../utils/options';
+import { KEY_CODES } from '../utils/dom';
 
 export default {
   name: 'VueSelect',
@@ -306,9 +307,7 @@ export default {
     onBlur() {
       if (this.closeOnSelect) {
         this.hideOptionsSelect();
-      }
-
-      if (this.preventHideOptions) {
+      } else if (this.preventHideOptions) {
         this.preventHideOptions = false;
       } else {
         this.hideOptionsSelect();
@@ -369,9 +368,20 @@ export default {
       return options.map(this.normalizer);
     },
     handleKeyDown(evt) {
-      if (this.open) {
+      if (!this.open) {
+        return;
+      }
+      const isMultipleSelectWithEmptySearchValue = this.multiple && this.searchable && !this.search;
+      const isBackSpace = evt.keyCode === KEY_CODES.BACKSPACE;
+      if (isMultipleSelectWithEmptySearchValue && isBackSpace && this.value.length > 0) {
+        evt.preventDefault();
+        // deselect the last value
+        const lastValue = this.value[this.value.length - 1];
+        this.deselectOption(lastValue);
+      } else {
+        // handle keyboard navigation
         const { panel } = this.$refs;
-        handleKeyDown(evt, panel, this.searchable);
+        navigateOptions(evt, panel, this.searchable);
       }
     },
   },

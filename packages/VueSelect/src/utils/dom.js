@@ -5,9 +5,10 @@ export const KEY_CODES = {
   UP: 38,
   RIGHT: 39,
   DOWN: 40,
+  BACKSPACE: 8,
 };
 
-export const isElement = el => el && el.nodeType === Node.ELEMENT_NODE;
+export const isElement = (el) => el && el.nodeType === Node.ELEMENT_NODE;
 
 export const triggerEvent = (el, type) => {
   if (!isElement(el)) {
