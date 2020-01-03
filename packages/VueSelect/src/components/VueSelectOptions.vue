@@ -28,10 +28,11 @@
       </div>
       <div
         v-if="creatable && !!search"
-        class="vue-select__options-item"
+        class="vue-select__options-item vue-select__options-item-create"
         @mousedown.prevent.stop="createOption(search)"
       >
-        create "<strong>{{ search }}</strong>"
+        <span class="vue-select__options-plus" />
+        Create "<strong>{{ search }}</strong>"
       </div>
       <template
         v-else-if="shownOptions.length === 0"
@@ -205,6 +206,38 @@ export default {
     cursor: pointer;
     &:hover {
       background-color: $background-color-hover;
+    }
+  }
+  &-item-create {
+    overflow: hidden;
+    text-overflow: '.."';
+  }
+  &-plus {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    &:before {
+      content: "";
+      width: 12px;
+      height: 2px;
+      background-color: darken($border-color, 70%);
+      position: absolute;
+      top: 5px;
+    }
+    &:after {
+      content: "";
+      width: 2px;
+      height: 12px;
+      background-color: darken($border-color, 70%);
+      position: absolute;
+      left: 5px;
+    }
+    &:hover, &:focus {
+      &:before, &::after {
+        background-color: darken($border-color, 100%);
+      }
     }
   }
   &-item--focus {
