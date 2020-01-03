@@ -32,7 +32,9 @@
         @mousedown.prevent.stop="createOption(search)"
       >
         <span class="vue-select__options-plus" />
-        Create "<strong>{{ search }}</strong>"
+        <span class="vue-select__options-item-create-text">
+          Create "<strong>{{ search }}</strong>"
+        </span>
       </div>
       <template
         v-else-if="shownOptions.length === 0"
