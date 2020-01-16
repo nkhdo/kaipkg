@@ -3,8 +3,8 @@
     <div
       class="vue-select__container"
       @click.prevent="focus"
-      @mousedown.prevent="preventHideOptions = true"
-      @mouseup.prevent="preventHideOptions = false"
+      @mousedown="preventHideOptions = true"
+      @mouseup="preventHideOptions = false"
     >
       <div class="vue-select__container-values">
         <div
@@ -24,7 +24,7 @@
             v-if="multiple"
             class="vue-select__deselect"
             title="Deselect"
-            @click.prevent.stop="deselectOption(val)"
+            @mousedown.prevent.stop="deselectOption(val)"
           />
         </div>
         <input
