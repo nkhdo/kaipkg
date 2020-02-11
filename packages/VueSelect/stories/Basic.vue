@@ -31,7 +31,7 @@
       id="multiple"
       class="sample"
     >
-      <label>Multiple</label>
+      <label>Multiple (number input)</label>
       <vue-select
         v-model="multipleValues"
         :options="options"
@@ -41,6 +41,7 @@
         :disabled="disabled"
         :close-on-select="closeOnSelect"
         multiple
+        search-input-type="number"
         @focus="onFocus"
         @blur="onBlur"
       />

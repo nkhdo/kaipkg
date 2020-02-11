@@ -32,6 +32,7 @@
           v-model="search"
           :placeholder="inputPlaceholder"
           :class="inputClasses"
+          :type="searchInputType"
           @focus="showOptionsSelect"
           @blur="onBlur"
           @keydown="handleKeyDown"
@@ -150,6 +151,10 @@ export default {
     searchable: {
       type: Boolean,
       default: true,
+    },
+    searchInputType: {
+      type: String,
+      default: 'text',
     },
     creatable: {
       type: Boolean,
