@@ -357,6 +357,11 @@ export default {
         this.$emit('input', null);
       }
       this.$emit('clear');
+
+      // re-focus the input in case options panel is opening
+      if (!this.closeOnSelect && this.open) {
+        this.$refs.inputElement.focus();
+      }
     },
     findOrCreateOptionWithValue(value) {
       const option = this.findOptionWithValue(value);
