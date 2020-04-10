@@ -1,8 +1,9 @@
 <template>
   <div :class="componentClasses">
     <div
+      ref="container"
       class="vue-select__container"
-      @click.prevent="focus"
+      @click.prevent="toggleOptionsSelect"
       @mousedown="preventHideOptions = true"
       @mouseup="preventHideOptions = false"
     >
@@ -33,8 +34,6 @@
           :placeholder="inputPlaceholder"
           :class="inputClasses"
           :type="searchInputType"
-          @focus="showOptionsSelect"
-          @blur="onBlur"
           @keydown="handleKeyDown"
         >
       </div>
@@ -275,6 +274,13 @@ export default {
       return [...this.options, ...this.createdOptions].map(this.normalizer);
     },
   },
+  watch: {
+    search(text) {
+      if (text.length > 0) {
+        this.open = true;
+      }
+    },
+  },
   created() {
     // force input value of multiple select to be an array
     if (this.multiple && !Array.isArray(this.value)) {
@@ -285,8 +291,24 @@ export default {
     if (this.autofocus) {
       this.focus();
     }
+    document.addEventListener('click', this.onClickOutside);
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.onClickOutside);
   },
   methods: {
+    onClickOutside(e) {
+      const { container, panel } = this.$refs;
+      if (!container || container.contains(e.target) || panel.contains(e.target)) return;
+      this.hideOptionsSelect();
+    },
+    toggleOptionsSelect() {
+      if (this.open) {
+        this.onBlur();
+      } else {
+        this.focus();
+      }
+    },
     focus() {
       this.$refs.inputElement.focus();
       this.showOptionsSelect();
