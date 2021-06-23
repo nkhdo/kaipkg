@@ -10,7 +10,7 @@
     "@storybook/addon-links": "^5.1.9",
     "@storybook/addons": "^5.1.9",
     "@storybook/storybook-deployer": "^2.8.1",
-    "@storybook/vue": "^5.1.9",
+    "@storybook/vue": "^6.3.0",
     "@vue/cli-service": "^4.1.1",
     "babel-loader": "^8.0.6",
     "babel-preset-vue": "^2.0.2",
